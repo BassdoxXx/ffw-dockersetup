@@ -61,4 +61,4 @@ secrets:
 
 networks:
   nginx_net:
-    external: true
+    driver: bridge

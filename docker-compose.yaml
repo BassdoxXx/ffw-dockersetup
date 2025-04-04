@@ -13,6 +13,8 @@ services:
       - WEBSOCKET_ENABLED=true
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    expose:
+      - "80"
 
   npm:
     image: jc21/nginx-proxy-manager:latest

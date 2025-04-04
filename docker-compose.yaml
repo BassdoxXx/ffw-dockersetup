@@ -7,10 +7,9 @@ services:
       - ./data/vaultwarden:/data
     networks:
       - nginx_net
-    secrets:
-      - vaultwarden_admin_token
     environment:
       - WEBSOCKET_ENABLED=true
+      - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     expose:
@@ -22,7 +21,7 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "81:81"     # WebUI
+      - "81:81"
       - "443:443"
     volumes:
       - ./data/npm/data:/data
@@ -38,10 +37,9 @@ services:
     restart: unless-stopped
     networks:
       - nginx_net
-    secrets:
-      - cloudflare_token
-    command: >
-      sh -c "cloudflared tunnel --no-autoupdate run --token $(cat /run/secrets/cloudflare_token)"
+    environment:
+      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -54,12 +52,6 @@ services:
     command: --cleanup --label-enable
     networks:
       - nginx_net
-
-secrets:
-  vaultwarden_admin_token:
-    file: ./secrets/vaultwarden_admin_token.txt
-  cloudflare_token:
-    file: ./secrets/cloudflare_token.txt
 
 networks:
   nginx_net:

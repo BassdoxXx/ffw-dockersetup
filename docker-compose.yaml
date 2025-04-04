@@ -1,26 +1,47 @@
-version: "3.8"
-
 services:
-  npm:
+  nginxproxymanager:
     image: jc21/nginx-proxy-manager:latest
-    container_name: npm
+    container_name: nginxproxymanager
     restart: unless-stopped
     ports:
       - "80:80"
       - "81:81"
       - "443:443"
     volumes:
-      - npm_data:/data
-      - npm_letsencrypt:/etc/letsencrypt
+      - npm-data:/data
+      - npm-letsencrypt:/etc/letsencrypt
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    secrets:
+      - admin_token
+    environment:
+      WEBSOCKET_ENABLED: 'true'
+      SIGNUPS_ALLOWED: 'false'
+      ADMIN_TOKEN_FILE: /run/secrets/admin_token
+    expose:
+      - "80"
+    volumes:
+      - vaultwarden-data:/data
 
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: unless-stopped
-    environment:
-      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
-    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
+    command: tunnel --no-autoupdate run --token $(cat /run/secrets/cf_tunnel_token)
+    secrets:
+      - cf_tunnel_token
+
+secrets:
+  cf_tunnel_token:
+    file: ./secrets/cf_tunnel_token
+
+  admin_token:
+    file: ./secrets/admin_token
 
 volumes:
-  npm_data:
-  npm_letsencrypt:
+  npm-data:
+  npm-letsencrypt:
+  vaultwarden-data:

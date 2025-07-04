@@ -9,7 +9,36 @@ services:
     networks:
       - core_net
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"  # falls du Watchtower nutzt
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    volumes:
+      - ./vw-data:/data
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+      # Add more Vaultwarden env vars as needed
+    networks:
+      - core_net
+    expose:
+      - "80"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+    networks:
+      - core_net
 
 networks:
   core_net:

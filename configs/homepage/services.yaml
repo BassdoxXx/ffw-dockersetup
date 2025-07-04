@@ -15,8 +15,8 @@
         container: homepage
         showStats: true
 
-    - Dashboard:
-        icon: cloudflared
+    - Cloudflare Tunnel:
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg
         description: Tunnelconnect für die Dienste
         container: cloudflared
         showStats: true

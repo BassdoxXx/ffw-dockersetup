@@ -8,9 +8,13 @@
 - datetime:
     format:
       dateStyle: short
-      timeStyle: medium
+      timeStyle: short
       hour12: false
     locale: de-DE
 
 - search:
     provider: duckduckgo
+
+- greeting:
+    text_size: xl
+    text: Herzlich Willkommen auf dem Dashboard der Feuerwehr Windischletten!

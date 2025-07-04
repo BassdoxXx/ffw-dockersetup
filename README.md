@@ -1,21 +1,85 @@
-# Cloudflare Tunnel Deployment mit Docker
+# ffw-dockersetup 🚒
 
-Dieses Setup stellt einen Cloudflare Tunnel bereit, über den Dienste auf einem privaten Server (z. B. Vaultwarden, Dashboard, Engelsystem) sicher und ohne offene Ports im Internet erreichbar sind.
+Docker-basierte Infrastruktur für die Feuerwehr Windischletten.  
+Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 
-## 🔐 Voraussetzungen
+## 📦 Enthaltene Services
 
-- Docker & Docker Compose sind installiert
-- Die Domain `ffw-windischletten.de` ist bei Cloudflare eingebunden
-- Ein Cloudflare-Tunnel ist erstellt und ein Token wurde generiert
-- Externes Docker-Netzwerk `core_net` ist vorhanden (für App-Kommunikation)
+| Dienst        | Beschreibung                            | URL                                 |
+|---------------|------------------------------------------|--------------------------------------|
+| Vaultwarden   | Passwortmanager für die Wehr            | `https://pw.ffw-windischletten.de`   |
+| Homepage      | Dashboard & Serviceübersicht            | `https://home.ffw-windischletten.de` |
+| Engelsystem   | Helfer- und Schichtverwaltung (folgt)   | `https://engelsystem.ffw-windischletten.de` |
+| Watchtower    | Automatische Container-Updates          | –                                    |
+| PostgreSQL    | Zentrale Datenbank für Dienste          | intern                               |
+| Cloudflared   | Tunneling via Cloudflare ohne Port-Forwarding | –                             |
 
-## 📁 Projektstruktur
+## 📁 Ordnerstruktur
+
+```
 .
-├── docker-compose.cloudflared.yml
-├── .env # enthält das Cloudflare Tunnel Token
-└── .gitignore
+├── docker-compose.yaml      # Zentrale Definition aller Dienste
+├── .env                     # Vertrauliche Umgebungsvariablen (nicht in Git!)
+├── update.sh                # Pull + Restart der Container
+├── configs/                 # Konfigurationen, die versioniert werden
+│   ├── homepage/            # YAML-Dateien für das Homepage-Dashboard
+│   └── watchtower/          # (Optional) Watchtower-Konfiguration
+├── data/                    # Persistente Volumes für Dienste (nicht versionieren)
+│   ├── db/                  # PostgreSQL-Daten
+│   ├── homepage/            # Laufzeitdaten Homepage
+│   └── vaultwarden/         # Vaultwarden Daten
+```
 
-## ⚙️ .env-Datei (nicht ins Repo!)
+## 🚀 Deployment
 
-Erstelle eine Datei `.env` im Projektverzeichnis mit folgendem Inhalt:
+1. `.env` Datei erstellen und sensible Werte eintragen (siehe `.env.example`)
+2. Docker Compose starten:
 
+```bash
+docker compose up -d
+```
+
+3. Logs prüfen (optional):
+
+```bash
+docker logs -f homepage
+```
+
+## 🔧 Wichtige Variablen (.env)
+
+```env
+POSTGRES_USER=...
+POSTGRES_PASSWORD=...
+CF_TUNNEL_TOKEN=...
+```
+
+Diese Datei **niemals ins Git pushen!**
+
+## 🛡 Sicherheit
+
+- Kein Port-Forwarding: Dienste laufen ausschließlich über **Cloudflare Tunnel**
+- SSL automatisch via Cloudflare
+- `vaultwarden` ist durch sichere Defaults abgesichert
+- `.env` + `data/` im `.gitignore`
+
+## 📊 Monitoring (Docker-Integration)
+
+Die `homepage` App zeigt für jeden konfigurierten Dienst:
+
+- CPU
+- RAM
+- Netzwerk
+- Verfügbarkeit via Ping / SiteMonitor
+
+Konfigurierbar über `configs/homepage/services.yaml`.
+
+## 📅 Geplante Erweiterungen
+
+- Engelsystem als eigener Container
+- SMTP-Benachrichtigung für Dienste
+- WhatsApp-Integration via CallMeBot
+
+## 🧯 Maintainer
+
+Martin Griebel  
+[https://martingriebel.de](https://martingriebel.de)

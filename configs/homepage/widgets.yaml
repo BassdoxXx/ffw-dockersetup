@@ -1,3 +1,8 @@
+
+- greeting:
+    text_size: xl
+    text: Herzlich Willkommen auf dem Dashboard der Feuerwehr Windischletten!
+
 - resources:
     cpu: true
     memory: true
@@ -14,7 +19,3 @@
 
 - search:
     provider: duckduckgo
-
-- greeting:
-    text_size: xl
-    text: Herzlich Willkommen auf dem Dashboard der Feuerwehr Windischletten!

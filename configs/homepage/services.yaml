@@ -12,6 +12,13 @@
         href: https://home.ffw-windischletten.de
         description: Übersicht und Schnellzugriff
         siteMonitor: https://home.ffw-windischletten.de
+        container: homepage
+        showStats: true
+
+    - Dashboard:
+        icon: cloudflared
+        description: Tunnelconnect für die Dienste
+        container: cloudflared
         showStats: true
 
 - Helferverwaltung:

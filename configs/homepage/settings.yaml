@@ -2,7 +2,6 @@ title: FFW Windischletten Dashboard
 description: Übersicht über alle Dienste auf dem VPS
 theme: dark
 color: slate
-favicon: https://www.ffw-windischletten.de/favicon.ico
 language: de
 target: _blank
 showStats: true
@@ -10,6 +9,7 @@ statusStyle: dot
 useEqualHeights: true
 headerStyle: boxed
 fullWidth: true
+base: https://home.ffw-windischletten.de
 
 layout:
   Infrastruktur:

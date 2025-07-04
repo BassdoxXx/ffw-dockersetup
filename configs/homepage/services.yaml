@@ -4,13 +4,14 @@
         href: https://pw.ffw-windischletten.de
         description: Passwortmanager für die Feuerwehr
         siteMonitor: https://pw.ffw-windischletten.de
+        container: vaultwarden
         showStats: true
 
     - Dashboard:
         icon: mdi-view-dashboard
         href: https://home.ffw-windischletten.de
         description: Übersicht und Schnellzugriff
-        container: vaultwarden
+        siteMonitor: https://home.ffw-windischletten.de
         showStats: true
 
 - Helferverwaltung:

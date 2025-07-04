@@ -23,8 +23,6 @@ services:
       # Add more Vaultwarden env vars as needed
     networks:
       - core_net
-    expose:
-      - "80"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -33,7 +31,7 @@ services:
     container_name: homepage
     restart: unless-stopped
     volumes:
-      - ./data/homepage:/app/config
+      - ./configs/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=home.ffw-windischletten.de

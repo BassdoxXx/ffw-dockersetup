@@ -6,8 +6,8 @@ Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 ## 📦 Enthaltene Services
 
 | Dienst        | Beschreibung                            | URL                                 |
-|---------------|------------------------------------------|--------------------------------------|
-| Vaultwarden   | Passwortmanager für die Wehr            | `https://pw.ffw-windischletten.de`   |
+|---------------|-----------------------------------------|--------------------------------------|
+| Vaultwarden   | Passwortmanager für die Feuerwehr       | `https://pw.ffw-windischletten.de`   |
 | Homepage      | Dashboard & Serviceübersicht            | `https://home.ffw-windischletten.de` |
 | Engelsystem   | Helfer- und Schichtverwaltung (folgt)   | `https://engelsystem.ffw-windischletten.de` |
 | Watchtower    | Automatische Container-Updates          | –                                    |
@@ -55,13 +55,6 @@ CF_TUNNEL_TOKEN=...
 
 Diese Datei **niemals ins Git pushen!**
 
-## 🛡 Sicherheit
-
-- Kein Port-Forwarding: Dienste laufen ausschließlich über **Cloudflare Tunnel**
-- SSL automatisch via Cloudflare
-- `vaultwarden` ist durch sichere Defaults abgesichert
-- `.env` + `data/` im `.gitignore`
-
 ## 📊 Monitoring (Docker-Integration)
 
 Die `homepage` App zeigt für jeden konfigurierten Dienst:
@@ -77,7 +70,8 @@ Konfigurierbar über `configs/homepage/services.yaml`.
 
 - Engelsystem als eigener Container
 - SMTP-Benachrichtigung für Dienste
-- WhatsApp-Integration via CallMeBot
+- Einladungssystem für Feiern
+- 
 
 ## 🧯 Maintainer
 

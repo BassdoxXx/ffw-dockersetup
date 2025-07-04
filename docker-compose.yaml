@@ -35,6 +35,8 @@ services:
     volumes:
       - ./data/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - HOMEPAGE_BASE_URL=https://home.ffw-windischletten.de
     networks:
       - core_net
     labels:

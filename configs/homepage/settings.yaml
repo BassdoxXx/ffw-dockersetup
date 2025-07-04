@@ -9,7 +9,6 @@ statusStyle: dot
 useEqualHeights: true
 headerStyle: boxed
 fullWidth: true
-base: https://home.ffw-windischletten.de
 
 layout:
   Infrastruktur:

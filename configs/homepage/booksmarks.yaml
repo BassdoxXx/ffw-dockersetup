@@ -1,0 +1,11 @@
+- group: Nützliches
+  bookmarks:
+    - GitHub:
+        - icon: github
+          href: https://github.com/BassdoxXx
+    - Cloudflare:
+        - icon: cloudflare
+          href: https://dash.cloudflare.com/
+    - Proxmox:
+        - icon: proxmox
+          href: https://proxmox.lan/

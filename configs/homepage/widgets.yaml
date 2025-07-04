@@ -1,0 +1,16 @@
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+    uptime: true
+    unit: metric
+
+- datetime:
+    format:
+      dateStyle: short
+      timeStyle: medium
+      hour12: false
+    locale: de-DE
+
+- search:
+    provider: duckduckgo

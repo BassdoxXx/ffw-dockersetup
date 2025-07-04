@@ -16,7 +16,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     volumes:
-      - ./vw-data:/data
+      - ./data/vaultwarden:/data
     environment:
       - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false
@@ -25,6 +25,18 @@ services:
       - core_net
     expose:
       - "80"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    volumes:
+      - ./data/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - core_net
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -39,6 +51,21 @@ services:
       - WATCHTOWER_LABEL_ENABLE=true
     networks:
       - core_net
+
+# Datenbanken
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/db/postgres:/var/lib/postgresql/data
+    networks:
+      - core_net
+
 
 networks:
   core_net:

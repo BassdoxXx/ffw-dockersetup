@@ -3,6 +3,10 @@
 
 /secrets
 /data
+# sensitive Daten
+.volumes/
+data/
+
 ### Linux ###
 *~
 

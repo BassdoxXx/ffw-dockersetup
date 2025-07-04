@@ -1,0 +1,32 @@
+- group: Infrastruktur
+  items:
+    - name: Vaultwarden
+      icon: vaultwarden
+      url: https://pw.ffw-windischletten.de
+      ping: https://pw.ffw-windischletten.de
+      description: Passwortmanager für die Wehr
+      showStats: true
+
+    - name: Dashboard
+      icon: mdi-view-dashboard
+      url: https://home.ffw-windischletten.de
+      ping: https://home.ffw-windischletten.de
+      description: Übersicht und Schnellzugriff
+      showStats: true
+
+- group: Helferverwaltung
+  items:
+    - name: Engelsystem
+      icon: mdi-fire-truck
+      url: https://engelsystem.ffw-windischletten.de
+      ping: https://engelsystem.ffw-windischletten.de
+      description: Dienstplan und Helferkoordination
+      showStats: true
+
+- group: Weitere Dienste
+  items:
+    - name: Placeholder App
+      icon: mdi-application
+      url: https://demo.example.com
+      ping: https://demo.example.com
+      description: Hier könnte dein Service stehen

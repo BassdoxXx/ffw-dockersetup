@@ -1,42 +1,16 @@
 services:
-  vaultwarden:
-    image: vaultwarden/server:latest
-    container_name: vaultwarden
-    restart: unless-stopped
-    volumes:
-      - ./data/vaultwarden:/data
-    networks:
-      - nginx_net
-    environment:
-      - WEBSOCKET_ENABLED=true
-      - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    expose:
-      - "80" # wichtig für den internen Zugriff durch cloudflared
-
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: unless-stopped
+    command: tunnel run --token ${CF_TUNNEL_TOKEN}
+    env_file:
+      - .env
     networks:
-      - nginx_net
-    environment:
-      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
-    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
+      - core_net
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --label-enable
-    networks:
-      - nginx_net
+      - "com.centurylinklabs.watchtower.enable=true"  # falls du Watchtower nutzt
 
 networks:
-  nginx_net:
-    driver: bridge
+  core_net:
+    external: true

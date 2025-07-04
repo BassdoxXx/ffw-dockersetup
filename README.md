@@ -1,30 +1,21 @@
-# ffw-dockersetup
- Beschreibt alle Dienste im FFW Netz
+# Cloudflare Tunnel Deployment mit Docker
 
+Dieses Setup stellt einen Cloudflare Tunnel bereit, über den Dienste auf einem privaten Server (z. B. Vaultwarden, Dashboard, Engelsystem) sicher und ohne offene Ports im Internet erreichbar sind.
 
-# NPM + Cloudflared Setup
+## 🔐 Voraussetzungen
 
-Dieses Repository enthält ein `docker-compose.yaml`, um **Nginx Proxy Manager** und **Cloudflared** gemeinsam in einem Container-Setup zu betreiben.
+- Docker & Docker Compose sind installiert
+- Die Domain `ffw-windischletten.de` ist bei Cloudflare eingebunden
+- Ein Cloudflare-Tunnel ist erstellt und ein Token wurde generiert
+- Externes Docker-Netzwerk `core_net` ist vorhanden (für App-Kommunikation)
 
-## Nutzung
+## 📁 Projektstruktur
+.
+├── docker-compose.cloudflared.yml
+├── .env # enthält das Cloudflare Tunnel Token
+└── .gitignore
 
-1. `.env`-Datei erstellen:
+## ⚙️ .env-Datei (nicht ins Repo!)
 
-```bash
-cp .env.example .env
-nano .env
-```
-
-2. Docker-Container starten
-
-docker compose up -d
-
-
-3. NPM ist erreichbar unter:
-
-http://[SERVER-IP]:81 (Webinterface)
-
-http://[SERVER-IP] / https://[SERVER-IP] für Weiterleitungen
-
-4. Cloudflared verbindet automatisch den Tunnel zu Cloudflare.
+Erstelle eine Datei `.env` im Projektverzeichnis mit folgendem Inhalt:
 

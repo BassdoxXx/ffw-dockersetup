@@ -39,6 +39,19 @@ services:
       - core_net
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+      
+  simple_invites:
+    image: bassdoxxx/simple_invites:latest
+    container_name: simple_invites
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app/static:/app/app/static
+      - ./data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=dein_geheimer_schluessel
 
   watchtower:
     image: containrrr/watchtower:latest

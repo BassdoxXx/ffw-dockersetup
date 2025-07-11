@@ -44,10 +44,11 @@ services:
     image: bassdoxxx/simple_invites:latest
     container_name: simple_invites
     restart: unless-stopped
+    ports:
+      - "5000:5000"
     volumes:
       - ./app/static:/app/app/static
-      - ./data:/app/data
-      - ./data/simple_invites_db:/app/data/db
+      - ./data/simple_invites:/data/simple_invites
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=dein_geheimer_schluessel

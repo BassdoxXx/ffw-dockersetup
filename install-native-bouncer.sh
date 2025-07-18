@@ -158,7 +158,7 @@ crowdsec-firewall-bouncer -c $CONFIG_FILE -t
 echo "Step 8: Teste Bouncer im Debug-Modus..."
 echo "Teste den Bouncer zuerst im Vordergrund (für 5 Sekunden)..."
 echo "Dies hilft, direkte Fehlermeldungen zu sehen."
-timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE -d || true
+timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE --debug || true
 
 echo "Step 9: Bouncer als Service aktivieren und starten..."
 if ! systemctl enable crowdsec-firewall-bouncer; then
@@ -180,7 +180,7 @@ if ! systemctl restart crowdsec-firewall-bouncer; then
     
     echo "3. Prüfe manuellen Start..."
     echo "Starte Bouncer manuell im Debug-Modus für 5 Sekunden:"
-    timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE -d || true
+    timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE --debug || true
     
     echo "Service konnte nicht gestartet werden. Versuche später manuell mit:"
     echo "sudo systemctl restart crowdsec-firewall-bouncer"
@@ -203,9 +203,9 @@ echo "Status prüfen mit: systemctl status crowdsec-firewall-bouncer"
 echo "Logs anzeigen mit: journalctl -u crowdsec-firewall-bouncer -f"
 echo ""
 echo "Konfiguration überprüfen mit: crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -t"
-echo "Debuggen mit: sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -d"
+echo "Debuggen mit: sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml --debug"
 echo ""
 echo "Bei Problemen kann die folgende Befehlssequenz helfen:"
 echo "1. sudo systemctl stop crowdsec-firewall-bouncer"
-echo "2. sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -d"
+echo "2. sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml --debug"
 echo ""

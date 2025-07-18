@@ -41,8 +41,8 @@ curl -v http://172.18.0.8:8080/v1/decisions -H "X-Api-Key: API_KEY"
 # Stoppe den Service zuerst
 sudo systemctl stop crowdsec-firewall-bouncer
 
-# Starte manuell im Debug-Modus
-sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -d
+# Starte manuell im Debug-Modus 
+sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml --debug
 ```
 
 ## 6. Häufige Probleme und Lösungen

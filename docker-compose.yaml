@@ -86,7 +86,7 @@ services:
       - CROWDSEC_ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
     networks:
       - core_net
-    entrypoint: ["/bin/sh", "-c", "cscli console enroll $${CROWDSEC_ENROLL_KEY} || true && /entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "cscli console enroll $${CROWDSEC_ENROLL_KEY} || true && /docker-entrypoint.sh"]
 
   postgres:
     image: postgres:15

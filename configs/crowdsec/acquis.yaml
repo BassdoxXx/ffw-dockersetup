@@ -1,19 +1,16 @@
-source_type: file
 filenames:
-  - /var/log/auth.log
+ - /var/log/auth.log
 labels:
-  type: syslog
+ type: syslog
 
 ---
-source_type: file
 filenames:
-  - /var/log/nginx/access.log
+ - /var/log/nginx/access.log
 labels:
-  type: nginx
+ type: nginx
 
 ---
-source_type: file
 filenames:
-  - /var/lib/docker/containers/
+ - /var/lib/docker/containers/
 labels:
-  type: docker
+ type: docker

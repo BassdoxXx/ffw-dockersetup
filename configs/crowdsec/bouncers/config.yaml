@@ -6,21 +6,25 @@ daemonize: false
 log_mode: stdout
 log_level: info
 
+# Bei Verwendung in Docker muss die API-URL auf den Service-Namen zeigen
 api_url: http://crowdsec:8080
-# Dieser API-Schlüssel muss nach der Installation generiert werden
-# Führe 'docker exec crowdsec cscli bouncers add firewall-bouncer' aus
-# und setze den generierten Schlüssel hier ein
+# Der API-Schlüssel wird über die Umgebungsvariable BOUNCER_API_KEY gesetzt
+# Diese Variable muss in der .env-Datei definiert werden nach Ausführung von:
+# 'docker exec crowdsec cscli bouncers add firewall-bouncer'
 api_key: ${BOUNCER_API_KEY}
 
+# Firewall-Konfiguration für iptables
 iptables_chains:
   - INPUT
   - FORWARD
   - DOCKER-USER
 
+# Aktionen für blockierte IPs
 deny_action: DROP
 deny_log: true
 deny_log_prefix: "crowdsec: "
 
+# IPSet-Konfiguration
 blacklists_ipv4: crowdsec-blacklists
 blacklists_ipv6: crowdsec6-blacklists
 ipset_size: 131072

@@ -93,7 +93,8 @@ services:
       - core_net
       
   crowdsec-firewall-bouncer:
-    image: crowdsecurity/cs-firewall-bouncer:latest
+    # Using the correct official image name
+    image: crowdsecurity/firewall-bouncer:latest
     container_name: crowdsec-firewall-bouncer
     restart: unless-stopped
     network_mode: host
@@ -101,8 +102,11 @@ services:
       - NET_ADMIN
       - NET_RAW
     volumes:
-      - ./configs/crowdsec/bouncers/config.yaml:/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
+      - ./configs/crowdsec/bouncers/config.yaml:/etc/crowdsec/bouncers/firewall-bouncer.yaml
       - /etc/localtime:/etc/localtime:ro
+    environment:
+      # API key will be set after generation
+      - BOUNCER_KEY_firewall=${BOUNCER_API_KEY:-api-key-will-be-set-after-generation}
     depends_on:
       - crowdsec
 

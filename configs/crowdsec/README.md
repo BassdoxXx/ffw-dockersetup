@@ -69,6 +69,63 @@ To check which logs are being monitored:
 docker exec crowdsec cscli metrics
 ```
 
+## Bouncer Setup
+
+CrowdSec benötigt einen Bouncer, um erkannte Bedrohungen aktiv zu blockieren. Ohne Bouncer werden Angriffe nur erkannt, aber nicht blockiert.
+
+### Firewall-Bouncer Installation
+
+1. Füge den Bouncer zur Docker-Compose-Datei hinzu:
+```yaml
+  crowdsec-firewall-bouncer:
+    image: crowdsecurity/cs-firewall-bouncer:latest
+    container_name: crowdsec-firewall-bouncer
+    restart: unless-stopped
+    environment:
+      - BOUNCER_KEY_FILE=/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.key
+      - BACKEND=iptables
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./configs/crowdsec/bouncers:/etc/crowdsec/bouncers
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - crowdsec
+```
+
+2. Erstelle zuerst das bouncers Verzeichnis:
+```bash
+mkdir -p ./configs/crowdsec/bouncers
+```
+
+3. Generiere einen Bouncer-API-Schlüssel:
+```bash
+docker exec crowdsec cscli bouncers add firewall-bouncer
+```
+
+4. Kopiere den generierten API-Schlüssel in die Bouncer-Konfiguration:
+```bash
+# Ersetze BOUNCER_KEY mit dem generierten Schlüssel
+sudo tee ./configs/crowdsec/bouncers/crowdsec-firewall-bouncer.key > /dev/null << EOT
+BOUNCER_KEY
+EOT
+```
+
+5. Starte den Bouncer:
+```bash
+docker compose up -d crowdsec-firewall-bouncer
+```
+
+### Überwachen der Blockierungen
+
+Nach der Einrichtung des Bouncers kannst du blockierte IPs überprüfen:
+
+```bash
+docker exec crowdsec cscli decisions list
+```
+
 ## Notes
 
 When updating configurations, simply update the files in this directory and restart CrowdSec:

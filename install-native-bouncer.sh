@@ -49,21 +49,54 @@ done
 echo "Step 4: $BOUNCER_PKG installieren..."
 apt install -y $BOUNCER_PKG
 
-# Get CrowdSec container IP
-echo "Step 5: IP-Adresse des CrowdSec-Containers ermitteln..."
-CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' crowdsec)
+# Get CrowdSec container IP and check if port mapping is configured
+echo "Step 5: Verbindung zum CrowdSec-Container konfigurieren..."
+CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' crowdsec 2>/dev/null || echo "")
+PORT_MAPPED=$(docker inspect -f '{{range $p, $conf := .NetworkSettings.Ports}}{{if eq $p "8080/tcp"}}{{range $conf}}true{{end}}{{end}}{{end}}' crowdsec 2>/dev/null | grep -c "true" || echo "0")
 
-if [ -z "$CONTAINER_IP" ]; then
-    echo "CrowdSec-Container nicht gefunden. Stelle sicher, dass er läuft!"
-    echo "Alternativ: Benutze 'localhost' wenn Port-Mapping konfiguriert ist."
-    read -p "API-URL (z.B. http://localhost:8080 oder http://172.17.0.2:8080): " API_URL
-else
+# Check if port mapping exists
+if [ "$PORT_MAPPED" -gt 0 ]; then
+    echo "Port-Mapping für 8080 erkannt, verwende localhost:8080"
+    API_URL="http://localhost:8080"
+elif [ -n "$CONTAINER_IP" ]; then
+    # Container IP found, use direct container access
     API_URL="http://${CONTAINER_IP}:8080"
-    echo "CrowdSec API-URL: $API_URL"
+    echo "CrowdSec direkte Container IP: $API_URL"
+else
+    # No container IP and no port mapping
+    echo "CrowdSec-Container nicht gefunden oder kein Port-Mapping vorhanden."
+    echo "Bitte gib die URL zur CrowdSec API manuell ein."
+    read -p "API-URL (z.B. http://localhost:8080 oder http://172.17.0.2:8080): " API_URL
 fi
 
-# Generate API key for the bouncer
-echo "Step 6: API-Schlüssel für Bouncer generieren..."
+# Verify API connection
+echo "Prüfe Verbindung zur CrowdSec API..."
+if curl -s -f "$API_URL/health" >/dev/null; then
+    echo "Verbindung zur CrowdSec API erfolgreich: $API_URL"
+else
+    echo "Warnung: Konnte keine Verbindung zur CrowdSec API herstellen: $API_URL"
+    echo "Überprüfe, ob der Container läuft und die API erreichbar ist."
+    read -p "Trotzdem fortfahren? (j/n): " CONTINUE
+    if [[ ! "$CONTINUE" =~ ^[jJyY]$ ]]; then
+        echo "Installation abgebrochen."
+        exit 1
+    fi
+fi
+
+# Generate API key for the bouncer or get existing one
+echo "Step 6: API-Schlüssel für Bouncer prüfen/generieren..."
+
+# Check if bouncer already exists
+BOUNCER_EXISTS=$(docker exec crowdsec cscli bouncers list -o raw | grep -c "cs-firewall-bouncer" || true)
+
+if [ "$BOUNCER_EXISTS" -gt 0 ]; then
+    echo "Bouncer existiert bereits, bestehenden Schlüssel abrufen..."
+    # Delete and recreate the bouncer to get a fresh API key
+    docker exec crowdsec cscli bouncers delete cs-firewall-bouncer
+    echo "Alter Bouncer gelöscht, neuen erstellen..."
+fi
+
+# Create new bouncer
 API_KEY=$(docker exec crowdsec cscli bouncers add cs-firewall-bouncer)
 
 if [ $? -ne 0 ]; then
@@ -72,7 +105,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Extract actual key from output
-API_KEY=$(echo "$API_KEY" | grep -oP 'API key for.*: \K.*')
+API_KEY=$(echo "$API_KEY" | grep -o 'API key for.*: .*' | cut -d ':' -f2 | tr -d ' ')
 
 # Update bouncer configuration
 echo "Step 7: Bouncer-Konfiguration aktualisieren..."
@@ -86,11 +119,22 @@ sed -i "s|api_url:.*|api_url: $API_URL|" $CONFIG_FILE
 sed -i "s|api_key:.*|api_key: $API_KEY|" $CONFIG_FILE
 
 echo "Step 8: Bouncer neustarten und aktivieren..."
-systemctl restart crowdsec-firewall-bouncer
-systemctl enable crowdsec-firewall-bouncer
+if ! systemctl restart crowdsec-firewall-bouncer; then
+    echo "Warnung: Fehler beim Neustart des Services. Versuche manuell mit:"
+    echo "sudo systemctl restart crowdsec-firewall-bouncer"
+else
+    echo "Service erfolgreich neu gestartet."
+fi
+
+if ! systemctl enable crowdsec-firewall-bouncer; then
+    echo "Warnung: Fehler beim Aktivieren des Services. Versuche manuell mit:"
+    echo "sudo systemctl enable crowdsec-firewall-bouncer"
+else
+    echo "Service erfolgreich aktiviert."
+fi
 
 echo "Step 9: Status überprüfen..."
-systemctl status crowdsec-firewall-bouncer --no-pager
+systemctl status crowdsec-firewall-bouncer --no-pager || true
 
 echo "============================================================"
 echo "Installation abgeschlossen!"
@@ -99,4 +143,11 @@ echo ""
 echo "Test mit: docker exec crowdsec cscli decisions add --ip 1.2.3.4 --duration 10m --reason \"Test\""
 echo "Status prüfen mit: systemctl status crowdsec-firewall-bouncer"
 echo "Logs anzeigen mit: journalctl -u crowdsec-firewall-bouncer -f"
+echo ""
+echo "Konfiguration überprüfen mit: crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -t"
+echo "Debuggen mit: sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -d"
+echo ""
+echo "Bei Problemen kann die folgende Befehlssequenz helfen:"
+echo "1. sudo systemctl stop crowdsec-firewall-bouncer"
+echo "2. sudo crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -d"
 echo ""

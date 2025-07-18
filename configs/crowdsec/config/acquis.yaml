@@ -1,10 +1,15 @@
 filenames:
- - /var/log/auth.log
  - /var/log/fail2ban.log*
- - /var/log/journal/*
- - /var/log/syslog*
+ - /var/log/alternatives.log*
+ - /var/log/dpkg.log*
 labels:
  type: syslog
+
+---
+filenames:
+ - /var/log/journal/*/system.journal
+labels:
+ type: journald
 
 ---
 filenames:

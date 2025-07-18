@@ -78,7 +78,6 @@ crowdsec:
   restart: always
   environment:
     COLLECTIONS: "crowdsecurity/nginx"
-    GID: 1000
   depends_on:
     - 'reverse-proxy'
   volumes:

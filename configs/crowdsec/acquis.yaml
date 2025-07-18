@@ -1,6 +1,6 @@
-- source: /var/log/auth.log
-  format: syslog
-- source: /var/log/nginx/access.log
-  format: nginx
-- source: /var/log/docker.log
-  format: docker
+filenames:
+  - /var/log/auth.log
+  - /var/log/nginx/access.log
+  - /var/log/docker.log
+labels:
+  type: syslog

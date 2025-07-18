@@ -20,11 +20,15 @@ services:
     environment:
       - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false
-      # Add more Vaultwarden env vars as needed
     networks:
       - core_net
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
@@ -39,7 +43,7 @@ services:
       - core_net
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-      
+
   simple_invites:
     image: bassdoxxx/simple_invites:latest
     container_name: simple_invites
@@ -69,7 +73,20 @@ services:
     networks:
       - core_net
 
-# Datenbanken
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    volumes:
+      - ./configs/crowdsec/data:/var/lib/crowdsec/data
+      - ./configs/crowdsec/config:/etc/crowdsec
+      - /var/log:/var/log:ro
+    environment:
+      - TZ=${TZ}
+    networks:
+      - core_net
+    ports:
+      - "8080:8080"
 
   postgres:
     image: postgres:15
@@ -82,7 +99,11 @@ services:
       - ./data/db/postgres:/var/lib/postgresql/data
     networks:
       - core_net
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
 
 networks:
   core_net:

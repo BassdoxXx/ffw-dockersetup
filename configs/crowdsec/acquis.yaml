@@ -11,6 +11,6 @@ labels:
 
 ---
 filenames:
- - /var/lib/docker/containers/
+ - /var/lib/docker/containers/*/*.log
 labels:
  type: docker

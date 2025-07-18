@@ -1,6 +1,9 @@
-filenames:
-  - /var/log/auth.log
-  - /var/log/nginx/access.log
-  - /var/log/docker.log
-labels:
-  type: syslog
+---
+- source: /var/log/auth.log
+  format: syslog
+- source: /var/log/nginx/access.log
+  format: nginx
+- source: /var/lib/docker/containers/
+  format: docker
+  labels:
+    type: docker

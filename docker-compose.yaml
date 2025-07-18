@@ -85,8 +85,6 @@ services:
       - TZ=${TZ}
     networks:
       - core_net
-    ports:
-      - "8080:8080"
 
   postgres:
     image: postgres:15

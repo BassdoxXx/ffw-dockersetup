@@ -82,7 +82,7 @@ services:
     depends_on:
       - 'cloudflared'
     volumes:
-      - ./configs/crowdsec:/etc/crowdsec
+      - ./configs/crowdsec/config:/etc/crowdsec
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data

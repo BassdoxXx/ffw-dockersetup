@@ -1,17 +1,19 @@
 # CrowdSec Configuration
 
-This directory contains the configuration files for CrowdSec.
+This directory is the parent directory for CrowdSec configurations.
 
-## Changes Made
+## Directory Structure
 
-- Updated docker-compose.yaml to mount the entire ./configs/crowdsec directory to /etc/crowdsec in the container
-- This eliminates the need to manually copy acquis.yaml to config/acquis.yaml after updates
-- All configuration files should be placed directly in this directory for automatic detection
+- `config/`: Contains all CrowdSec configuration files that get mounted to /etc/crowdsec
+- `data/`: Contains CrowdSec data files
 
-## Configuration Files
+## Important Note
 
-- acquis.yaml: Defines the log sources to monitor
-- Additional configuration files will be stored here
+All configuration files should be placed in the `config/` directory, including:
+- `config/acquis.yaml`: Defines the log sources to monitor
+- Other CrowdSec configuration files
+
+The current setup mounts `./configs/crowdsec/config` to `/etc/crowdsec` in the container
 
 ## Notes
 

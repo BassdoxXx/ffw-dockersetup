@@ -84,6 +84,7 @@ services:
     volumes:
       - ./configs/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./configs/crowdsec/config:/etc/crowdsec
 

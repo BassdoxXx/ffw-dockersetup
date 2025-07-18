@@ -2,3 +2,7 @@
   format: syslog
 - source: /var/log/nginx/access.log
   format: nginx
+- source: /var/lib/docker/containers/
+  format: docker
+  labels:
+    type: docker

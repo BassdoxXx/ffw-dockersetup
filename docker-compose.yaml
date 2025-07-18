@@ -75,6 +75,7 @@ services:
 
   crowdsec:
     image: crowdsecurity/crowdsec
+    container_name: crowdsec
     restart: always
     environment:
       COLLECTIONS: "crowdsecurity/nginx"

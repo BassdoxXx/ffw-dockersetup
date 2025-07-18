@@ -80,6 +80,9 @@ services:
     # Gruppe mit GID vom Host verwenden (logreader)
     group_add:
       - "1001"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
+    # Port für API freigeben (für native Bouncer erforderlich)
+    ports:
+      - "127.0.0.1:8080:8080"  # Nur lokal zugänglich machen
     environment:
       COLLECTIONS: "crowdsecurity/nginx"
     depends_on:
@@ -92,23 +95,8 @@ services:
     networks:
       - core_net
       
-  crowdsec-firewall-bouncer:
-    # Using the correct official image name
-    image: crowdsecurity/firewall-bouncer:latest
-    container_name: crowdsec-firewall-bouncer
-    restart: unless-stopped
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    volumes:
-      - ./configs/crowdsec/bouncers/config.yaml:/etc/crowdsec/bouncers/firewall-bouncer.yaml
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      # API key will be set after generation
-      - BOUNCER_KEY_firewall=${BOUNCER_API_KEY:-api-key-will-be-set-after-generation}
-    depends_on:
-      - crowdsec
+  # Native installation of bouncer on host is recommended instead of Docker
+  # See setup-native-bouncer.md for instructions
 
   postgres:
     image: postgres:15

@@ -13,6 +13,7 @@ Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 | Watchtower    | Automatische Container-Updates          | –                                    |
 | PostgreSQL    | Zentrale Datenbank für Dienste          | intern                               |
 | Cloudflared   | Tunneling via Cloudflare ohne Port-Forwarding | –                             |
+| CrowdSec      | Sicherheits-Engine zur Angriffserkennung und -abwehr | –                      |
 
 ## 📁 Ordnerstruktur
 
@@ -21,8 +22,10 @@ Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 ├── docker-compose.yaml      # Zentrale Definition aller Dienste
 ├── .env                     # Vertrauliche Umgebungsvariablen (nicht in Git!)
 ├── update.sh                # Pull + Restart der Container
+├── setup-native-bouncer.md  # Anleitung für die native CrowdSec Bouncer Installation
 ├── configs/                 # Konfigurationen, die versioniert werden
 │   ├── homepage/            # YAML-Dateien für das Homepage-Dashboard
+│   ├── crowdsec/            # CrowdSec Konfigurationen (acquis.yaml, etc.)
 │   └── watchtower/          # (Optional) Watchtower-Konfiguration
 ├── data/                    # Persistente Volumes für Dienste (nicht versionieren)
 │   ├── db/                  # PostgreSQL-Daten
@@ -66,12 +69,29 @@ Die `homepage` App zeigt für jeden konfigurierten Dienst:
 
 Konfigurierbar über `configs/homepage/services.yaml`.
 
-## 📅 Geplante Erweiterungen
+## � Sicherheit mit CrowdSec
+
+Das Setup beinhaltet [CrowdSec](https://crowdsec.net/) zur Angriffserkennung und -abwehr:
+
+1. **CrowdSec Engine** (Docker): Überwacht Logs und erkennt Angriffsmuster
+2. **Firewall Bouncer** (nativ): Blockiert erkannte Angreifer auf Firewall-Ebene
+
+Siehe `setup-native-bouncer.md` für die Installation des nativen Bouncers.
+
+```bash
+# Anzeige aller erkannten Bedrohungen
+docker exec crowdsec cscli alerts list
+
+# Anzeige aller Blockierungen
+docker exec crowdsec cscli decisions list
+```
+
+## �📅 Geplante Erweiterungen
 
 - Engelsystem als eigener Container
 - SMTP-Benachrichtigung für Dienste
 - Einladungssystem für Feiern
-- 
+- CrowdSec Dashboard für Angriffserkennung
 
 ## 🧯 Maintainer
 

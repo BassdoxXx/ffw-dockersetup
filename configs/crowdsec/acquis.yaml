@@ -1,4 +1,3 @@
-# acquis.yaml
----
-- type: docker
-  container_name_regexp: ".*"
+source:
+  - type: docker
+    container_name_regexp: ".*"

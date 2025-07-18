@@ -1,6 +1,18 @@
 # ffw-dockersetup 🚒
 
-Docker-basierte Infrastruktur für die Feuerwehr Windischletten.  
+Docker-basierte Infrastruktur für die Feuerwehr W## 🛡️ Sicherheit mit CrowdSec
+
+Das Setup beinhaltet [CrowdSec](https://crowdsec.net/) zur Angriffserkennung:
+
+1. **CrowdSec Engine** (Docker): Überwacht Logs und erkennt Angriffsmuster
+
+```bash
+# Anzeige aller erkannten Bedrohungen
+docker exec crowdsec cscli alerts list
+
+# Anzeige aller Blockierungen
+docker exec crowdsec cscli decisions list
+```
 Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 
 ## 📦 Enthaltene Services
@@ -22,7 +34,7 @@ Ziel ist ein wartbares, sicheres und zentrales Setup für alle internen Dienste.
 ├── docker-compose.yaml      # Zentrale Definition aller Dienste
 ├── .env                     # Vertrauliche Umgebungsvariablen (nicht in Git!)
 ├── update.sh                # Pull + Restart der Container
-├── setup-native-bouncer.md  # Anleitung für die native CrowdSec Bouncer Installation
+├── remove-bouncer.sh        # Script zum Entfernen des CrowdSec Bouncers
 ├── configs/                 # Konfigurationen, die versioniert werden
 │   ├── homepage/            # YAML-Dateien für das Homepage-Dashboard
 │   ├── crowdsec/            # CrowdSec Konfigurationen (acquis.yaml, etc.)

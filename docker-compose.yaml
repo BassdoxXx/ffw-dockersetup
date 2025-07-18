@@ -80,9 +80,7 @@ services:
     # Gruppe mit GID vom Host verwenden (logreader)
     group_add:
       - "1001"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
-    # Port für API freigeben (für native Bouncer erforderlich)
-    ports:
-      - "127.0.0.1:8080:8080"  # Nur lokal zugänglich machen
+    # No port forwarding needed if not using bouncer
     environment:
       COLLECTIONS: "crowdsecurity/nginx"
     depends_on:
@@ -95,8 +93,7 @@ services:
     networks:
       - core_net
       
-  # Native installation of bouncer on host is recommended instead of Docker
-  # See setup-native-bouncer.md for instructions
+  # Bouncers removed due to compatibility issues
 
   postgres:
     image: postgres:15

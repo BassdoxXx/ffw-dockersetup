@@ -73,19 +73,19 @@ services:
     networks:
       - core_net
 
-  crowdsec:
-    image: crowdsecurity/crowdsec:latest
-    container_name: crowdsec
-    restart: unless-stopped
-    volumes:
-      - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - ./configs/crowdsec/config:/etc/crowdsec
-      - ./configs/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - /var/log:/var/log:ro
-    environment:
-      - TZ=${TZ}
-    networks:
-      - core_net
+crowdsec:
+  image: crowdsecurity/crowdsec
+  restart: always
+  environment:
+    COLLECTIONS: "crowdsecurity/nginx"
+    GID: "${GID - 1000}"
+  depends_on:
+    - 'reverse-proxy'
+  volumes:
+    - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+    - logs:/var/log/nginx
+    - crowdsec-db:/var/lib/crowdsec/data/
+    - crowdsec-config:/etc/crowdsec/
 
   postgres:
     image: postgres:15

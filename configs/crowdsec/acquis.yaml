@@ -1,0 +1,6 @@
+- source: /var/log/auth.log
+  format: syslog
+- source: /var/log/nginx/access.log
+  format: nginx
+- source: /var/log/docker.log
+  format: docker

@@ -79,7 +79,7 @@ services:
     environment:
       COLLECTIONS: "crowdsecurity/nginx"
     depends_on:
-      - 'reverse-proxy'
+      - 'cloudflared'
     volumes:
       - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - logs:/var/log/nginx

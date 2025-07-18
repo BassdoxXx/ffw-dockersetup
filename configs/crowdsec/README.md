@@ -78,7 +78,7 @@ CrowdSec benötigt einen Bouncer, um erkannte Bedrohungen aktiv zu blockieren. O
 1. Füge den Bouncer zur Docker-Compose-Datei hinzu:
 ```yaml
   crowdsec-firewall-bouncer:
-    image: crowdsecurity/cs-firewall-bouncer:latest
+    image: crowdsecurity/crowdsec-firewall-bouncer:latest
     container_name: crowdsec-firewall-bouncer
     restart: unless-stopped
     environment:

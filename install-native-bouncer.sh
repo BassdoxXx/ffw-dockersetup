@@ -71,10 +71,29 @@ fi
 
 # Verify API connection
 echo "Prüfe Verbindung zur CrowdSec API..."
-if curl -s -f "$API_URL/health" >/dev/null; then
+CURL_OUTPUT=$(curl -s -v "$API_URL/health" 2>&1)
+CURL_EXIT_CODE=$?
+
+if [ $CURL_EXIT_CODE -eq 0 ]; then
     echo "Verbindung zur CrowdSec API erfolgreich: $API_URL"
+    
+    # Test more endpoints to make sure API is fully functional
+    echo "Teste weitere API-Endpunkte..."
+    DECISIONS_TEST=$(curl -s -f "$API_URL/v1/decisions" -H "X-Api-Key: DUMMY_KEY" 2>&1)
+    if [ $? -ne 0 ]; then
+        echo "Warnung: Konnte nicht auf den Decisions-Endpunkt zugreifen."
+        echo "Das könnte auf ein Problem mit der API hindeuten."
+    else
+        echo "API-Endpunkt /v1/decisions erfolgreich getestet."
+    fi
 else
     echo "Warnung: Konnte keine Verbindung zur CrowdSec API herstellen: $API_URL"
+    echo "Fehler-Details:"
+    echo "$CURL_OUTPUT"
+    echo ""
+    echo "Prüfe, ob der Container läuft:"
+    docker ps | grep crowdsec || echo "CrowdSec-Container nicht gefunden!"
+    echo ""
     echo "Überprüfe, ob der Container läuft und die API erreichbar ist."
     read -p "Trotzdem fortfahren? (j/n): " CONTINUE
     if [[ ! "$CONTINUE" =~ ^[jJyY]$ ]]; then
@@ -96,16 +115,30 @@ if [ "$BOUNCER_EXISTS" -gt 0 ]; then
     echo "Alter Bouncer gelöscht, neuen erstellen..."
 fi
 
-# Create new bouncer
-API_KEY=$(docker exec crowdsec cscli bouncers add cs-firewall-bouncer)
+# Create new bouncer and save output to a file for inspection
+docker exec crowdsec cscli bouncers add cs-firewall-bouncer > /tmp/bouncer_output.txt 2>&1
 
 if [ $? -ne 0 ]; then
-    echo "Fehler beim Generieren des API-Schlüssels!"
+    echo "Fehler beim Generieren des API-Schlüssels! Ausgabe:"
+    cat /tmp/bouncer_output.txt
     exit 1
 fi
 
-# Extract actual key from output
-API_KEY=$(echo "$API_KEY" | grep -o 'API key for.*: .*' | cut -d ':' -f2 | tr -d ' ')
+# Extract actual key from output with more robust method
+echo "Extrahiere API-Schlüssel..."
+cat /tmp/bouncer_output.txt
+API_KEY=$(cat /tmp/bouncer_output.txt | grep -o "API key for.*: .*" | sed 's/.*: //')
+
+if [ -z "$API_KEY" ]; then
+    echo "Konnte API-Schlüssel nicht extrahieren. Bitte gib ihn manuell ein."
+    echo "Ausgabe des Befehls:"
+    cat /tmp/bouncer_output.txt
+    read -p "API-Schlüssel: " API_KEY
+fi
+
+# Display key for verification (safely, hiding most characters)
+DISPLAY_KEY="${API_KEY:0:4}...${API_KEY: -4}"
+echo "API-Schlüssel (teilweise): $DISPLAY_KEY"
 
 # Update bouncer configuration
 echo "Step 7: Bouncer-Konfiguration aktualisieren..."
@@ -116,16 +149,18 @@ cp $CONFIG_FILE ${CONFIG_FILE}.bak
 
 # Update configuration
 sed -i "s|api_url:.*|api_url: $API_URL|" $CONFIG_FILE
-sed -i "s|api_key:.*|api_key: $API_KEY|" $CONFIG_FILE
+sed -i "s|api_key:.*|api_key: \"$API_KEY\"|" $CONFIG_FILE  # Make sure API key is quoted
 
-echo "Step 8: Bouncer neustarten und aktivieren..."
-if ! systemctl restart crowdsec-firewall-bouncer; then
-    echo "Warnung: Fehler beim Neustart des Services. Versuche manuell mit:"
-    echo "sudo systemctl restart crowdsec-firewall-bouncer"
-else
-    echo "Service erfolgreich neu gestartet."
-fi
+# Debug output to verify configuration
+echo "Checking configuration..."
+crowdsec-firewall-bouncer -c $CONFIG_FILE -t
 
+echo "Step 8: Teste Bouncer im Debug-Modus..."
+echo "Teste den Bouncer zuerst im Vordergrund (für 5 Sekunden)..."
+echo "Dies hilft, direkte Fehlermeldungen zu sehen."
+timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE -d || true
+
+echo "Step 9: Bouncer als Service aktivieren und starten..."
 if ! systemctl enable crowdsec-firewall-bouncer; then
     echo "Warnung: Fehler beim Aktivieren des Services. Versuche manuell mit:"
     echo "sudo systemctl enable crowdsec-firewall-bouncer"
@@ -133,8 +168,31 @@ else
     echo "Service erfolgreich aktiviert."
 fi
 
-echo "Step 9: Status überprüfen..."
+if ! systemctl restart crowdsec-firewall-bouncer; then
+    echo "Warnung: Fehler beim Neustart des Services."
+    echo "Versuche Fehler zu diagnostizieren:"
+    
+    echo "1. Prüfe Konfiguration..."
+    crowdsec-firewall-bouncer -c $CONFIG_FILE -t
+    
+    echo "2. Prüfe Berechtigungen der Konfigurationsdatei..."
+    ls -la $CONFIG_FILE
+    
+    echo "3. Prüfe manuellen Start..."
+    echo "Starte Bouncer manuell im Debug-Modus für 5 Sekunden:"
+    timeout 5 crowdsec-firewall-bouncer -c $CONFIG_FILE -d || true
+    
+    echo "Service konnte nicht gestartet werden. Versuche später manuell mit:"
+    echo "sudo systemctl restart crowdsec-firewall-bouncer"
+else
+    echo "Service erfolgreich neu gestartet."
+fi
+
+echo "Step 9: Status und Logs überprüfen..."
 systemctl status crowdsec-firewall-bouncer --no-pager || true
+
+echo "Letzte Logs (für Fehlerdiagnose):"
+journalctl -u crowdsec-firewall-bouncer -n 20 --no-pager || true
 
 echo "============================================================"
 echo "Installation abgeschlossen!"

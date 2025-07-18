@@ -81,10 +81,10 @@ services:
     depends_on:
       - 'cloudflared'
     volumes:
-      - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - logs:/var/log/nginx
-      - crowdsec-db:/var/lib/crowdsec/data/
-      - crowdsec-config:/etc/crowdsec/
+      - ./configs/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - /var/log:/var/log:ro
+      - ./configs/crowdsec/data:/var/lib/crowdsec/data
+      - ./configs/crowdsec/config:/etc/crowdsec
 
   postgres:
     image: postgres:15

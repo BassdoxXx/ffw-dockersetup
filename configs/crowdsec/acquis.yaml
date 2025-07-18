@@ -1,3 +1,10 @@
-source:
-  - type: docker
-    container_name_regexp: ".*"
+- type: docker
+  container_name_regexp: ".*"
+- type: file
+  path: /var/log/auth.log
+  labels:
+    type: syslog
+- type: file
+  path: /var/log/nginx/access.log
+  labels:
+    type: nginx

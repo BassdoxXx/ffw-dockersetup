@@ -80,6 +80,7 @@ services:
     volumes:
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./configs/crowdsec/config:/etc/crowdsec
+      - ./configs/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - /var/log:/var/log:ro
     environment:
       - TZ=${TZ}

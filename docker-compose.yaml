@@ -79,7 +79,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - ./configs/crowdsec/config:/etc/crowdsec
+      - ./configs/crowdsec/:/etc/crowdsec
       - /var/log:/var/log:ro
     environment:
       - TZ=${TZ}

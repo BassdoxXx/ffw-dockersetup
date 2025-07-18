@@ -1,0 +1,2 @@
+- type: docker
+  container_name_regexp: ".*"

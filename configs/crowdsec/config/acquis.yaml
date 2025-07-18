@@ -1,5 +1,8 @@
 filenames:
  - /var/log/auth.log
+ - /var/log/fail2ban.log*
+ - /var/log/journal/*
+ - /var/log/syslog*
 labels:
  type: syslog
 

@@ -77,6 +77,9 @@ services:
     image: crowdsecurity/crowdsec
     container_name: crowdsec
     restart: always
+    # Gruppe mit GID vom Host verwenden (logreader)
+    group_add:
+      - "1001"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
     environment:
       COLLECTIONS: "crowdsecurity/nginx"
     depends_on:
@@ -86,6 +89,8 @@ services:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
+    networks:
+      - core_net
 
   postgres:
     image: postgres:15

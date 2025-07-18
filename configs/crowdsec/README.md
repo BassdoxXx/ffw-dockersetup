@@ -1,11 +1,12 @@
 # CrowdSec Configuration
 
-This directory is the parent directory for CrowdSec configurations.
+Diese Verzeichnisstruktur enthält alle Konfigurationsdateien für CrowdSec und den Firewall Bouncer.
 
 ## Directory Structure
 
-- `config/`: Contains all CrowdSec configuration files that get mounted to /etc/crowdsec
-- `data/`: Contains CrowdSec data files
+- `config/`: CrowdSec-Konfigurationsdateien, die nach /etc/crowdsec gemountet werden
+- `data/`: CrowdSec-Datendateien
+- `bouncers/`: Konfigurationsdateien für Bouncer-Komponenten
 
 ## Setup Instructions
 

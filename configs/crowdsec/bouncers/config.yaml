@@ -1,0 +1,26 @@
+# Firewall Bouncer Konfiguration
+mode: iptables
+pid_dir: /var/run/
+update_frequency: 10s
+daemonize: false
+log_mode: stdout
+log_level: info
+
+api_url: http://crowdsec:8080
+# Dieser API-Schlüssel muss nach der Installation generiert werden
+# Führe 'docker exec crowdsec cscli bouncers add firewall-bouncer' aus
+# und setze den generierten Schlüssel hier ein
+api_key: ${BOUNCER_API_KEY}
+
+iptables_chains:
+  - INPUT
+  - FORWARD
+  - DOCKER-USER
+
+deny_action: DROP
+deny_log: true
+deny_log_prefix: "crowdsec: "
+
+blacklists_ipv4: crowdsec-blacklists
+blacklists_ipv6: crowdsec6-blacklists
+ipset_size: 131072

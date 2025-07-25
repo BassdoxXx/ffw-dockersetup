@@ -44,7 +44,6 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
-
   simple_invites:
     image: bassdoxxx/simple_invites:latest
     container_name: simple_invites
@@ -52,22 +51,17 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      # Persistente Daten (SQLite DB, Secret Key, etc.)
+      - ./app/static:/app/app/static
       - ./data/simple_invites:/app/instance
-      - ./data/simple_invites/static:/app/app/static  # Für Uploads/statische Dateien
     environment:
       - FLASK_ENV=production
-      - SECRET_KEY=${SIMPLE_INVITES_SECRET_KEY:-your_secret_key_here}
+      - SECRET_KEY=dein_geheimer_schluessel
       - APP_HOSTNAME=https://invites.ffw-windischletten.de
+      - PDF_CLEANUP_MINUTES=30
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - core_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
       
   watchtower:
     image: containrrr/watchtower:latest

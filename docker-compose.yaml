@@ -51,7 +51,6 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./app/static:/app/app/static
       - ./data/simple_invites:/app/instance
     environment:
       - FLASK_ENV=production

@@ -21,7 +21,7 @@
         container: cloudflared
         showStats: true
 
-- Helferverwaltung:
+- Support Systeme:
     - Engelsystem:
         icon: mdi-fire-truck
         href: https://engelsystem.ffw-windischletten.de
@@ -29,9 +29,11 @@
         description: Dienstplan und Helferkoordination
         showStats: true
 
-- Weitere Dienste:
-    - Placeholder App:
+    - Einladungen:
         icon: mdi-application
-        href: https://demo.example.com
-        siteMonitor: https://demo.example.com
-        description: Hier könnte dein Service stehen
+        href: https://invites.ffw-windischletten.de/admin/
+        siteMonitor: https://invites.ffw-windischletten.de
+        description: Einladungsverwaltung
+
+
+- Weitere Dienste:

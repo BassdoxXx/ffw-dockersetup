@@ -14,7 +14,7 @@
         showStats: true
 
     - Watchtower:
-        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/watchtower.svg
         description: Aktualisiert automatisch die Container
         container: watchtower
         showStats: true

@@ -1,11 +1,25 @@
-- group: Nützliches
-  bookmarks:
-    - GitHub:
-        - icon: github
-          href: https://github.com/BassdoxXx
-    - Cloudflare:
-        - icon: cloudflare
-          href: https://dash.cloudflare.com/
-    - Proxmox:
-        - icon: proxmox
-          href: https://proxmox.lan/
+---
+- Nützliches:
+    - Feuerwehr Homepage:
+        - abbr: FFW
+          href: https://www.ffw-windischletten.de/
+
+    - Selfhostec Icons:
+        - abbr: SI
+          href: https://selfh.st/icons/
+
+    - KFV Bamberg:
+      - abbr: KFV
+        href: https://www.kfv-ba.de/
+
+    - LFV Bayern:
+        - abbr: LFV
+          href: https://www.lfv-bayern.de/
+
+    - Feuerwehr Lernbar:
+        - abbr: FL
+          href: https://www.feuerwehr-lernbar.bayern/home
+
+    - Kreisjugendring Bamberg:
+        - abbr: KB
+          href: https://www.kjr-bamberg-land.de/

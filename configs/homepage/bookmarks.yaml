@@ -1,12 +1,8 @@
 ---
-- Nützliches:
+- Feuerwehr:
     - Feuerwehr Homepage:
         - abbr: FF
           href: https://www.ffw-windischletten.de/
-
-    - Selfhostec Icons:
-        - abbr: SI
-          href: https://selfh.st/icons/
 
     - KFV Bamberg:
       - abbr: KV
@@ -30,7 +26,12 @@
           href: https://reddit.com/
           description: The front page of the internet
 
-- Entertainment:
-    - YouTube:
-        - abbr: YT
-          href: https://youtube.com/
+    - Instagram:
+        - icon: instagram.png
+          href: https://instagram.com/
+          description: Instagram
+
+- Nützliches:
+    - Selfhostec Icons:
+        - abbr: SI
+          href: https://selfh.st/icons/

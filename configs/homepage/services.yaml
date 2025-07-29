@@ -19,6 +19,12 @@
         container: watchtower
         showStats: true
 
+    - Crowdsec:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/crowdsec.svg
+        description: Crowdsourced IPS
+        container: crowdsec
+        showStats: true
+
 - Tools:
     - Engelsystem:
         icon: mdi-fire-truck

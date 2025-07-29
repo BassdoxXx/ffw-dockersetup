@@ -1,7 +1,7 @@
 ---
 - Nützliches:
     - Feuerwehr Homepage:
-        - abbr: FFW
+        - abbr: FF
           href: https://www.ffw-windischletten.de/
 
     - Selfhostec Icons:
@@ -9,11 +9,11 @@
           href: https://selfh.st/icons/
 
     - KFV Bamberg:
-      - abbr: KFV
+      - abbr: KV
         href: https://www.kfv-ba.de/
 
     - LFV Bayern:
-        - abbr: LFV
+        - abbr: LV
           href: https://www.lfv-bayern.de/
 
     - Feuerwehr Lernbar:
@@ -23,3 +23,14 @@
     - Kreisjugendring Bamberg:
         - abbr: KB
           href: https://www.kjr-bamberg-land.de/
+
+- Social:
+    - Reddit:
+        - icon: reddit.png
+          href: https://reddit.com/
+          description: The front page of the internet
+
+- Entertainment:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/

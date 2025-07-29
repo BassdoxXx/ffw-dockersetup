@@ -11,7 +11,7 @@ headerStyle: boxed
 fullWidth: true
 
 layout:
-  Infrastruktur:
+  Cloud-Infrastruktur:
     style: row
     columns: 3
   Verwaltung:

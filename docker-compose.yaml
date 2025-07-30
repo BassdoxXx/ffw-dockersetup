@@ -100,19 +100,40 @@ services:
       dockerfile: docker/Dockerfile
     container_name: engelsystem
     restart: unless-stopped
+    environment:
+      MYSQL_TYPE: mariadb
+      MYSQL_HOST: engelsystem_db
+      MYSQL_USER: engelsystem
+      MYSQL_PASSWORD: engelsystem
+      MYSQL_DATABASE: engelsystem
+      ENVIRONMENT: production
+      APP_URL: https://helfer.ffw-windischletten.de
     volumes:
       - ./data/engelsystem/config:/var/www/html/config
-      - ./data/engelsystem/db:/var/www/html/db
       - ./data/engelsystem/storage:/var/www/html/storage
       - ./data/engelsystem/resources:/var/www/html/resources
-    environment:
-      - ENVIRONMENT=production
-      - APP_URL=https://helfer.ffw-windischletten.de
     networks:
       - core_net
+    depends_on:
+      - engelsystem_db
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       
+  engelsystem_db:
+    image: mariadb:10.7
+    container_name: engelsystem_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: engelsystem
+      MYSQL_USER: engelsystem
+      MYSQL_PASSWORD: engelsystem
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+      MYSQL_INITDB_SKIP_TZINFO: "yes"
+    volumes:
+      - ./data/engelsystem/db:/var/lib/mysql
+    networks:
+      - core_net
+
   postgres:
     image: postgres:15
     container_name: postgres

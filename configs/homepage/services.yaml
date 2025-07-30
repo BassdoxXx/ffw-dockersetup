@@ -30,6 +30,7 @@
         icon: mdi-fire-truck
         href: https://helfer.ffw-windischletten.de
         siteMonitor: https://helfer.ffw-windischletten.de
+        container: engelsystem
         description: Dienstplan und Helferkoordination
         showStats: true
 

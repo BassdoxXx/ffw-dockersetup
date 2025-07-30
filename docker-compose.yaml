@@ -102,16 +102,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/engelsystem/config:/var/www/html/config
-      - ./data/engelsystem/resources/lang:/var/www/html/resources/lang
-      - ./data/engelsystem/resources/views:/var/www/html/resources/views
-      - ./data/engelsystem/public/assets:/var/www/html/public/assets
-      - ./data/engelsystem/storage:/var/www/html/storage
       - ./data/engelsystem/db:/var/www/html/db
+      - ./data/engelsystem/storage:/var/www/html/storage
+      - ./data/engelsystem/resources:/var/www/html/resources
     environment:
       - ENVIRONMENT=production
       - APP_URL=https://helfer.ffw-windischletten.de
-      - DB_DRIVER=sqlite
-      - DB_DATABASE=/var/www/html/db/engelsystem.sqlite
     networks:
       - core_net
     labels:

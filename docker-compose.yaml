@@ -94,6 +94,33 @@ services:
     networks:
       - core_net
       
+  engelsystem:
+    build: 
+      context: ./app/engelsystem
+      dockerfile: docker/Dockerfile
+    container_name: engelsystem
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - ./data/engelsystem/config:/var/www/html/config
+      - ./data/engelsystem/resources/lang:/var/www/html/resources/lang
+      - ./data/engelsystem/resources/views:/var/www/html/resources/views
+      - ./data/engelsystem/public/assets:/var/www/html/public/assets
+      - ./data/engelsystem/storage:/var/www/html/storage
+    environment:
+      - ENVIRONMENT=production
+      - APP_URL=https://helfer.ffw-windischletten.de
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_DATABASE=${ENGELSYSTEM_DB_NAME}
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - core_net
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      
   postgres:
     image: postgres:15
     container_name: postgres

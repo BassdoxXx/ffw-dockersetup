@@ -72,7 +72,6 @@ services:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
       - WATCHTOWER_POLL_INTERVAL=18000
-      
     networks:
       - core_net
 
@@ -89,10 +88,10 @@ services:
       - 6060
       - 7422
     volumes:
-      - ./configs/crowdsec/config:/etc/crowdsec
+      - ./configs/crowdsec/configs:/etc/crowdsec
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - ./docker_test_whoami/data/traefik/logs:/var/log/traefik:ro
+      - ./data/traefik/logs:/var/log/traefik:ro
     networks:
       - core_net
     labels:
@@ -161,6 +160,85 @@ services:
         limits:
           cpus: '1.0'
           memory: 1G
+  whoami:
+    image: containous/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      - core_net
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami-rtr.entrypoints=https"
+      - "traefik.http.routers.whoami-rtr.rule=Host(`test.ffw-windischletten.de`)"
+      - "traefik.http.routers.whoami-rtr.service=whoami-svc"
+      - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
+      - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
+      - "traefik.http.routers.whoami-rtr.middlewares=crowdsec@file"      
+
+  traefik:
+    image: traefik:v3.5.0
+    container_name: traefik
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/traefik/conf/:/etc/traefik/dynamic/
+      - ./data/traefik/acme:/acme
+      - ./data/traefik/logs:/logs
+
+    command:
+      - --global.checkNewVersion=true
+      - --global.sendAnonymousUsage=true
+      - --entryPoints.http.address=:8111
+      - --entryPoints.https.address=:443
+      - --entryPoints.http.forwardedHeaders.trustedIPs=172.0.0.0/8,10.10.0.0/16,192.168.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
+      - --entryPoints.https.forwardedHeaders.trustedIPs=172.0.0.0/8,10.10.0.0/16,192.168.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
+      - --providers.docker=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=false
+      - --providers.file=true
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+      - --serverstransport.insecureskipverify=true
+      - --experimental.plugins.bouncer.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      - --experimental.plugins.bouncer.version=v1.4.1
+      - --log.level=WARN # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - --accessLog=true
+      - --accessLog.filePath=/logs/access.log
+      - --accesslog.format=json
+      - --accessLog.bufferingSize=100
+      # - --accessLog.filters.statusCodes=204-299,400-499,500-599
+      - --accesslog.fields.defaultmode=keep
+      - --accesslog.fields.headers.defaultmode=keep
+      - --accesslog.fields.headers.names.User-Agent=keep
+      - --accesslog.fields.headers.names.Referer=keep
+      - --log.maxsize=50
+      - --log.maxbackups=3
+      - --log.maxage=7
+      #Zertifikate
+      - --certificatesResolvers.staging.acme.dnschallenge=true
+      - --certificatesResolvers.staging.acme.storage=/acme/staging.json
+      - --certificatesResolvers.staging.acme.dnschallenge.provider=cloudflare
+      - --certificatesResolvers.staging.acme.email=ffwindischletten@gmail.com
+      - --certificatesResolvers.staging.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesResolvers.staging.acme.dnschallenge.resolvers=fatima.ns.cloudflare.com:53,matt.ns.cloudflare.com:53
+      - --certificatesResolvers.production.acme.dnschallenge=true
+      - --certificatesResolvers.production.acme.storage=/acme/letsencrypt.json
+      - --certificatesResolvers.production.acme.dnschallenge.provider=cloudflare
+      - --certificatesResolvers.production.acme.email=ffwindischletten@gmail.com
+      - --certificatesResolvers.production.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesResolvers.production.acme.dnschallenge.resolvers=fatima.ns.cloudflare.com:53,matt.ns.cloudflare.com:53
+      #SSL
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+    networks:
+      - core_net
 
 networks:
   core_net:

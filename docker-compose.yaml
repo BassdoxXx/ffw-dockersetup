@@ -82,8 +82,8 @@ services:
     restart: always
     # Gruppe mit GID vom Host verwenden (logreader)
 
-    group_add:
-      - "1001"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
+    # group_add:
+    #   - "1000"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
     # No port forwarding needed if not using bouncer
     environment:
       - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs

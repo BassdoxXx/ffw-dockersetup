@@ -242,11 +242,11 @@ services:
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
-      - CROWDSEC_LAPI_KEY=${CROWDSEC_LAPI_KEY}
+      - CROWDSEC_LAPI_KEY=J99kqoW8+ng/GF0LRGoDiYTncli9EiVm7uqMUS5L5W0
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
-      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=$${CROWDSEC_LAPI_KEY}" # Use double $ to escape in YAML
+      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=${CROWDSEC_LAPI_KEY}"
     networks:
       - core_net
 

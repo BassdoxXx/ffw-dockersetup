@@ -3,8 +3,11 @@
 docker exec crowdsec cscli console enroll -e context <YOUR-CODE>
  
 # add bouncer
-
 docker exec crowdsec cscli bouncers add traefik-bouncer
+
+### In Case of Problems API-Key zurücksetzen und neu generieren
+docker exec -it crowdsec cscli bouncers delete traefik-bouncer
+
  
 # list notifications
 

@@ -88,9 +88,10 @@ services:
       - 6060
       - 7422
     volumes:
-      - ./configs/crowdsec:/etc/crowdsec
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./configs/crowdsec/config:/etc/crowdsec
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
+      - ./configs/crowdsec/db:/var/lib/crowdsec/db  # Zusätzlich für die SQLite-Datenbank
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./data/traefik/logs:/var/log/traefik:ro
     networks:
       - core_net

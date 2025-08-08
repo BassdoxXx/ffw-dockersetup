@@ -6,6 +6,8 @@ services:
     command: tunnel run --token ${CF_TUNNEL_TOKEN}
     env_file:
       - .env
+    volumes:
+      - ./data/cloudflared:/etc/cloudflared  # Explizites Mapping für Cloudflared-Konfiguration
     networks:
       - core_net
     labels:
@@ -36,6 +38,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./configs/homepage:/app/config
+      - ./data/homepage:/app/data    # Explizites Mapping für Homepage-Daten
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=home.ffw-windischletten.de
@@ -54,8 +57,8 @@ services:
       - ./data/simple_invites:/app/instance
     environment:
       - FLASK_ENV=production
-      - SECRET_KEY=dein_geheimer_schluessel
-      - APP_HOSTNAME=https://invites.ffw-windischletten.de
+      - SECRET_KEY=${SIMPLE_INVITES_SECRET_KEY}
+      - APP_HOSTNAME=https://invites.example.org
       - PDF_CLEANUP_MINUTES=30
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
@@ -68,10 +71,11 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/watchtower:/var/lib/watchtower  # Explizites Mapping für Watchtower-Daten
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
-      - WATCHTOWER_POLL_INTERVAL=18000
+      - WATCHTOWER_POLL_INTERVAL=3600
     networks:
       - core_net
 
@@ -90,7 +94,7 @@ services:
     volumes:
       - ./configs/crowdsec/config:/etc/crowdsec
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - ./configs/crowdsec/db:/var/lib/crowdsec/db  # Zusätzlich für die SQLite-Datenbank
+      - ./configs/crowdsec/db:/var/lib/crowdsec/db
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./data/traefik/logs:/var/log/traefik:ro
     networks:
@@ -161,10 +165,13 @@ services:
         limits:
           cpus: '1.0'
           memory: 1G
+
   whoami:
     image: containous/whoami
     container_name: whoami
     restart: unless-stopped
+    volumes:
+      - ./data/whoami:/data
     networks:
       - core_net
     labels:
@@ -176,6 +183,7 @@ services:
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
       - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
       - "traefik.http.routers.whoami-rtr.middlewares=crowdsec@file"      
+
   traefik:
     image: traefik:v3.5.0
     container_name: traefik
@@ -187,6 +195,7 @@ services:
       - ./configs/traefik:/etc/traefik/dynamic/
       - ./data/traefik/acme:/acme
       - ./data/traefik/logs:/logs
+      - ./data/traefik/plugins:/plugins
     command:
       - --global.checkNewVersion=true
       - --global.sendAnonymousUsage=true

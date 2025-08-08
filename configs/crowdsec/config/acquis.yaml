@@ -3,9 +3,9 @@ filenames:
 labels:
   type: traefik
 ---
-listen_addr: 0.0.0.0:7422
-appsec_config: crowdsecurity/appsec-default
-name: myAppSecComponent
 source: appsec
+name: myAppSecComponent
+listen_uri: 0.0.0.0:7422
+appsec_config: crowdsecurity/appsec-default
 labels:
   type: appsec

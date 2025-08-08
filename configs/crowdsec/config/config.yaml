@@ -41,12 +41,14 @@ api:
     online_client:
       credentials_path: /etc/crowdsec//online_api_credentials.yaml
     enable: true
+    # AppSec-Konfiguration als Teil des API-Servers
+    appsec:
+      enabled: true
+      listen_uri: 0.0.0.0:7422
+      update_frequency: 10s
+      log_level: warn
 prometheus:
   enabled: true
   level: full
   listen_addr: 0.0.0.0
   listen_port: 6060
-# AppSec-Konfiguration
-appsec_config:
-  listeners:
-  - name: appsec-http

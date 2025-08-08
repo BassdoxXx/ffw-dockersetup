@@ -1,0 +1,27 @@
+http:
+  middlewares:
+    crowdsec:
+      plugin:
+        bouncer:
+          enabled: true
+          defaultDecisionSeconds: 60
+          crowdsecMode: live
+          crowdsecAppsecEnabled: true
+          crowdsecAppsecHost: crowdsec:7422
+          crowdsecAppsecFailureBlock: true
+          crowdsecAppsecUnreachableBlock: true
+          crowdsecLapiKey: FsQHCn9B0M2sJFWNbQQ5vR4UUNorchmaA62sI9PqJE4
+          crowdsecLapiHost: crowdsec:8080
+          crowdsecLapiScheme: http
+          crowdsecLapiTLSInsecureVerify: false
+          forwardedHeadersTrustedIPs:
+            # private class ranges
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+          clientTrustedIPs:
+            # private class ranges
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+

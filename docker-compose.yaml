@@ -77,15 +77,16 @@ services:
       - core_net
 
   crowdsec:
-    image: crowdsecurity/crowdsec
+    image: crowdsecurity/crowdsec:latest
     container_name: crowdsec
     restart: always
     # Gruppe mit GID vom Host verwenden (logreader)
+
     group_add:
       - "1001"  # Ersetze diese ID mit der tatsächlichen GID der logreader-Gruppe
     # No port forwarding needed if not using bouncer
     environment:
-      COLLECTIONS: "crowdsecurity/nginx"
+      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs
     depends_on:
       - 'cloudflared'
     volumes:
@@ -93,9 +94,19 @@ services:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
+      - ./data/logs:/var/log/traefik:ro
     networks:
       - core_net
-      
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.crowdsec-rtr.rule=Host(`crowdsec.srv-docker-1.home`)"
+      # - "traefik.http.routers.crowdsec-rtr.tls=true"
+      # - "traefik.http.routers.crowdsec-rtr.tls.certresolver=local"
+      # - "traefik.http.routers.crowdsec-rtr.service=crowdsec-svc"
+      # - "traefik.http.services.crowdsec-svc.loadbalancer.server.port=6060"
+      # - "traefik.http.routers.crowdsec-rtr.middlewares=basicauth3"
+
   engelsystem:
     build: 
       context: ./app/engelsystem

@@ -94,7 +94,7 @@ services:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - /home/martin/ffw-dockersetup/docker_test_whoami/data/traefik/logs:/var/log/traefik:ro
+      - /home/martin/ffw-dockersetup/docker_test_whoami/data/traefik/logs:/var/log/traefik
     networks:
       - core_net
     labels:

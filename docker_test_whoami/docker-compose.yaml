@@ -12,7 +12,7 @@ services:
       - "traefik.http.routers.whoami-rtr.rule=Host(`test.ffw-windischletten.de`)"
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
-      - "traefik.http.routers.whoami-rtr.tls.certResolver=staging"
+      - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
 
   traefik:
     image: traefik:v3.5.0

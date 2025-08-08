@@ -13,6 +13,7 @@ services:
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
       - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
+      - "traefik.http.routers.whoami-rtr.middlewares=realip,crowdsec@file"      
 
   traefik:
     image: traefik:v3.5.0
@@ -79,6 +80,11 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
+      # Realip
+      - "traefik.http.middlewares.realip.plugin.traefik-realip-plugin.retrievers.header=CF-Connecting-IP"
+      - "traefik.http.middlewares.realip.plugin.traefik-realip-plugin.headers[0]=X-Real-IP"
+      - "traefik.http.middlewares.realip.plugin.traefik-realip-plugin.headers[1]=X-Forwarded-For"
+
     restart: always
     networks:
       - core_net

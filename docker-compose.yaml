@@ -242,6 +242,7 @@ services:
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+      - CROWDSEC_LAPI_KEY=${CROWDSEC_LAPI_KEY}
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"

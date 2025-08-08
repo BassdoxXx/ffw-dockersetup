@@ -246,7 +246,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
-      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=${CROWDSEC_LAPI_KEY}"
+      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=$${CROWDSEC_LAPI_KEY}" # Use double $ to escape in YAML
     networks:
       - core_net
 

@@ -10,7 +10,7 @@ http:
           crowdsecAppsecHost: crowdsec:7422
           crowdsecAppsecFailureBlock: true
           crowdsecAppsecUnreachableBlock: true
-          crowdsecLapiKey: lhzPuut8CPjBnChx69x8r6sQNA6geymc2hcBDA8hYt8
+          crowdsecLapiKey: ${CROWDSEC_LAPI_KEY}
           crowdsecLapiHost: crowdsec:8080
           crowdsecLapiScheme: http
           crowdsecLapiTLSInsecureVerify: false

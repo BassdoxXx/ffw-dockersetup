@@ -88,7 +88,7 @@ services:
       - 6060
       - 7422
     volumes:
-      - ./configs/crowdsec/configs:/etc/crowdsec
+      - ./configs/crowdsec:/etc/crowdsec
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./data/traefik/logs:/var/log/traefik:ro
@@ -175,7 +175,6 @@ services:
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
       - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
       - "traefik.http.routers.whoami-rtr.middlewares=crowdsec@file"      
-
   traefik:
     image: traefik:v3.5.0
     container_name: traefik
@@ -184,17 +183,16 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/traefik/conf/:/etc/traefik/dynamic/
+      - ./configs/traefik:/etc/traefik/dynamic/
       - ./data/traefik/acme:/acme
       - ./data/traefik/logs:/logs
-
     command:
       - --global.checkNewVersion=true
       - --global.sendAnonymousUsage=true
       - --entryPoints.http.address=:8111
       - --entryPoints.https.address=:443
-      - --entryPoints.http.forwardedHeaders.trustedIPs=172.0.0.0/8,10.10.0.0/16,192.168.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
-      - --entryPoints.https.forwardedHeaders.trustedIPs=172.0.0.0/8,10.10.0.0/16,192.168.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
+      - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,172.18.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
+      - --entryPoints.https.forwardedHeaders.trustedIPs=127.0.0.1/32,172.18.0.0/16,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,104.16.0.0/13,104.24.0.0/14,108.162.192.0/18,131.0.72.0/22,141.101.64.0/18,162.158.0.0/15,172.64.0.0/13,173.245.48.0/20,188.114.96.0/20,190.93.240.0/20,197.234.240.0/22,198.41.128.0/17,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.exposedByDefault=false
@@ -237,6 +235,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
+      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=${CROWDSEC_LAPI_KEY}"
     networks:
       - core_net
 

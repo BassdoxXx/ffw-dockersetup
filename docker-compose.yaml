@@ -84,6 +84,10 @@ services:
       - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs
     depends_on:
       - 'cloudflared'
+    expose:
+      - 8080
+      - 6060
+      - 7422
     volumes:
       - ./configs/crowdsec/config:/etc/crowdsec
       - /var/lib/docker/containers:/var/lib/docker/containers:ro

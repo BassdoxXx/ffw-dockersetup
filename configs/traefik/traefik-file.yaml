@@ -3,7 +3,7 @@ http:
     crowdsec:
       plugin:
         bouncer:
-          enabled: true
+          enabled: false
           defaultDecisionSeconds: 60
           crowdsecMode: live
           crowdsecAppsecEnabled: true

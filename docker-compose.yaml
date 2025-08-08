@@ -91,7 +91,6 @@ services:
       - 'cloudflared'
     volumes:
       - ./configs/crowdsec/config:/etc/crowdsec
-      - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./docker_test_whoami/data/traefik/logs:/var/log/traefik:ro

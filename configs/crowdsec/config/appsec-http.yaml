@@ -1,0 +1,6 @@
+---
+name: appsec-http
+listener_type: http
+update_frequency: 10s
+addr: 0.0.0.0:7422
+log_level: warn

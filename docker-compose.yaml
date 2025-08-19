@@ -84,13 +84,12 @@ services:
     container_name: crowdsec
     restart: always
     environment:
-      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs
+      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux
     depends_on:
       - 'cloudflared'
     expose:
       - 8080
       - 6060
-      - 7422
     volumes:
       - ./configs/crowdsec/config:/etc/crowdsec
       - ./configs/crowdsec/data:/var/lib/crowdsec/data

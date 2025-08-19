@@ -108,6 +108,19 @@ services:
       # - "traefik.http.routers.crowdsec-rtr.service=crowdsec-svc"
       # - "traefik.http.services.crowdsec-svc.loadbalancer.server.port=6060"
       # - "traefik.http.routers.crowdsec-rtr.middlewares=basicauth3"
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.enabled=true
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=${CROWDSEC_LAPI_KEY}
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecMode=live
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecAppsecEnabled=true
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecAppsecHost=crowdsec:7422
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiHost=crowdsec:8080
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiScheme=http
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiTLSInsecureVerify=false
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecAppsecFailureBlock=false
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecAppsecUnreachableBlock=false
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.defaultDecisionSeconds=60
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.forwardedHeadersTrustedIPs=127.0.0.1/32,172.18.0.0/16
+      - traefik.http.middlewares.crowdsec.plugin.bouncer.clientTrustedIPs=127.0.0.1/32,172.18.0.0/16
 
   engelsystem:
     build: 
@@ -182,7 +195,7 @@ services:
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
       - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
-      - "traefik.http.routers.whoami-rtr.middlewares=crowdsec@file"      
+      - "traefik.http.routers.whoami-rtr.middlewares=crowdsec"
 
   traefik:
     image: traefik:v3.5.0

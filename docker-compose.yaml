@@ -84,14 +84,15 @@ services:
     container_name: crowdsec
     restart: always
     environment:
-      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux
+      - COLLECTIONS="crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux"
+      - CONFIG_FILE=/etc/crowdsec/config.yaml
     depends_on:
       - 'cloudflared'
     expose:
       - 8080
       - 6060
     volumes:
-  # Mount full CrowdSec config directory at default location (/etc/crowdsec)
+  # Mount full CrowdSec config directory at default location (/etc/crowdsec) (rw so it can write credentials)
       - ./configs/crowdsec/config:/etc/crowdsec
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./configs/crowdsec/db:/var/lib/crowdsec/db

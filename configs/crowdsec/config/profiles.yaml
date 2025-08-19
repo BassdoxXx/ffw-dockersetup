@@ -1,0 +1,8 @@
+profiles:
+	- name: default
+		filters:
+			- events_count > 0
+		decisions:
+			- type: ban
+				scope: ip
+				duration: 4h

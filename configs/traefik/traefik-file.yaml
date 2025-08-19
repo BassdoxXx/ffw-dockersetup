@@ -1,0 +1,21 @@
+http:
+  middlewares:
+    crowdsec:
+      plugin:
+        bouncer:
+          enabled: true
+          defaultDecisionSeconds: 60
+          crowdsecMode: live
+          crowdsecAppsecEnabled: true
+          crowdsecAppsecHost: crowdsec:7422
+          crowdsecLapiHost: crowdsec:8080
+          crowdsecLapiScheme: http
+          crowdsecLapiTLSInsecureVerify: false
+          crowdsecAppsecFailureBlock: false
+          crowdsecAppsecUnreachableBlock: false
+          forwardedHeadersTrustedIPs:
+            - 127.0.0.1/32
+            - 172.18.0.0/16
+          clientTrustedIPs:
+            - 127.0.0.1/32
+            - 172.18.0.0/16

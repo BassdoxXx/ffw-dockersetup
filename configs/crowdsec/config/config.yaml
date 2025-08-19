@@ -1,31 +1,31 @@
-# Minimal CrowdSec main configuration managed via Git
-# Keep AppSec configuration separate (see appsec/appsec.yaml and dedicated crowdsec-appsec service)
+# CrowdSec main configuration (Git-managed)
+# AppSec listener runs in separate container using appsec/appsec.yaml
 
-config_version: 1
-
-# Disable enrollment prompts in container automation
 common:
   daemonize: false
-  # Log level for the agent process
+  log_media: stdout
   log_level: info
 
 cscli:
   output: human
+  color: auto
 
 crowdsec_service:
   acquisition_path: /etc/crowdsec/acquis.yaml
+
+db_config:
+  type: sqlite
+  db_path: /var/lib/crowdsec/data/crowdsec.db
 
 api:
   server:
     listen_uri: 0.0.0.0:8080
     profiles_path: /etc/crowdsec/profiles.yaml
-    online_client: # left empty to avoid enrollment
+    log_level: info
   client:
     insecure_skip_verify: true
 
 prometheus:
   enabled: true
-  level: full
-  listen_addr: 0.0.0.0:6060
-
-# Local API (LAPI) retention/database settings can be tuned later if needed
+  listen_addr: 0.0.0.0
+  listen_port: 6060

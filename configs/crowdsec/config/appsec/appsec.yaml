@@ -1,0 +1,9 @@
+# Listeners definition for CrowdSec AppSec module
+listeners:
+  - name: traefik-appsec
+    listener_type: http
+    addr: 0.0.0.0:7422
+    log_level: warn
+    update_frequency: 10s
+    # Which AppSec config from hub to load (already installed by your COLLECTIONS)
+    appsec_config: crowdsecurity/appsec-default

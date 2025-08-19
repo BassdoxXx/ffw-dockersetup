@@ -90,7 +90,6 @@ services:
     expose:
       - 8080
       - 6060
-      - 7422
     volumes:
       - ./configs/crowdsec/config:/etc/crowdsec
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
@@ -108,6 +107,24 @@ services:
       # - "traefik.http.routers.crowdsec-rtr.service=crowdsec-svc"
       # - "traefik.http.services.crowdsec-svc.loadbalancer.server.port=6060"
       # - "traefik.http.routers.crowdsec-rtr.middlewares=basicauth3"
+
+  crowdsec-appsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec-appsec
+    restart: always
+    depends_on:
+      - crowdsec
+    command: crowdsec appsec -c /etc/crowdsec/appsec/appsec.yaml
+    expose:
+      - 7422
+    volumes:
+      - ./configs/crowdsec/config:/etc/crowdsec:ro
+      - ./configs/crowdsec/data:/var/lib/crowdsec/data:ro
+      - ./configs/crowdsec/db:/var/lib/crowdsec/db:ro
+    networks:
+      - core_net
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   engelsystem:
     build: 

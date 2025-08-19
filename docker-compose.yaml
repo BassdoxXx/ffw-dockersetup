@@ -84,7 +84,7 @@ services:
     container_name: crowdsec
     restart: always
     environment:
-      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios crowdsecurity/sshd crowdsecurity/linux crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-crs"
     depends_on:
       - 'cloudflared'
     expose:
@@ -92,9 +92,9 @@ services:
       - 6060
       - 7422
     volumes:
-      - ./configs/crowdsec/config:/etc/crowdsec
+      # Nur noch die Acquisition-Datei versionieren
+      - ./configs/crowdsec/config/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
-      - ./configs/crowdsec/db:/var/lib/crowdsec/db
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./data/traefik/logs:/var/log/traefik:ro
     networks:

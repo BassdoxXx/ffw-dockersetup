@@ -2,3 +2,10 @@ filenames:
   - /var/log/traefik/*.log
 labels:
   type: traefik
+---
+source: appsec
+name: myAppSecComponent
+listen_addr: 0.0.0.0:7422
+appsec_config: crowdsecurity/appsec-default
+labels:
+  type: appsec

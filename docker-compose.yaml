@@ -91,7 +91,10 @@ services:
       - 8080
       - 6060
     volumes:
-      - ./configs/crowdsec/config:/etc/crowdsec
+  # Mount only the key files, keep default bundled parsers/scenarios inside image
+      - ./configs/crowdsec/config/config.yaml:/etc/crowdsec/config.yaml:ro
+      - ./configs/crowdsec/config/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - ./configs/crowdsec/config/profiles.yaml:/etc/crowdsec/profiles.yaml:ro
       - ./configs/crowdsec/data:/var/lib/crowdsec/data
       - ./configs/crowdsec/db:/var/lib/crowdsec/db
       - /var/lib/docker/containers:/var/lib/docker/containers:ro

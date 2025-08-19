@@ -9,7 +9,7 @@ cscli:
   color: auto
 
 crowdsec_service:
-  acquisition_path: /etc/crowdsec/acquis.yaml
+  acquisition_path: /etc/crowdsec/config/acquis.yaml
 
 db_config:
   type: sqlite
@@ -18,7 +18,7 @@ db_config:
 api:
   server:
    listen_uri: 0.0.0.0:8080
-   profiles_path: /etc/crowdsec/profiles.yaml
+   profiles_path: /etc/crowdsec/config/profiles.yaml
    log_level: info
   client:
    insecure_skip_verify: true

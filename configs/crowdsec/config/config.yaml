@@ -18,7 +18,6 @@ crowdsec_service:
 db_config:
   type: sqlite
   db_path: /var/lib/crowdsec/data/crowdsec.db
-  flush: true
 
 api:
   server:

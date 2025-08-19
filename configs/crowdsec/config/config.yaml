@@ -3,6 +3,7 @@
 
 common:
   daemonize: false
+  pid_dir: /var/run/ # keep default
   log_media: stdout
   log_level: info
 
@@ -10,12 +11,14 @@ cscli:
   output: human
   color: auto
 
+# Acquisition file listing log sources
 crowdsec_service:
   acquisition_path: /etc/crowdsec/acquis.yaml
 
 db_config:
   type: sqlite
   db_path: /var/lib/crowdsec/data/crowdsec.db
+  flush: true
 
 api:
   server:
@@ -27,5 +30,6 @@ api:
 
 prometheus:
   enabled: true
+  level: basic
   listen_addr: 0.0.0.0
   listen_port: 6060

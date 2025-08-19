@@ -114,7 +114,11 @@ services:
     restart: always
     depends_on:
       - crowdsec
-    command: crowdsec appsec -c /etc/crowdsec/appsec/appsec.yaml
+    entrypoint:
+      - crowdsec
+      - appsec
+      - -c
+      - /etc/crowdsec/appsec/appsec.yaml
     expose:
       - 7422
     volumes:

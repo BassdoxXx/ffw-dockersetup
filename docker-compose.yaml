@@ -258,7 +258,6 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
-      - "traefik.http.middlewares.crowdsec.plugin.bouncer.crowdsecLapiKey=${CROWDSEC_LAPI_KEY}"
     networks:
       - core_net
 

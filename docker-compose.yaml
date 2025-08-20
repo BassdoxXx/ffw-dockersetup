@@ -85,7 +85,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
       - "traefik.http.routers.immich-rtr.entrypoints=https"
-      - "traefik.http.routers.immich-rtr.rule=Host(`photos.ffw-windischletten.de`)"
+      - "traefik.http.routers.immich-rtr.rule=Host(`pics.ffw-windischletten.de`)"
       - "traefik.http.routers.immich-rtr.service=immich-svc"
       - "traefik.http.services.immich-svc.loadbalancer.server.port=2283"
       - "traefik.http.routers.immich-rtr.tls.certResolver=production"

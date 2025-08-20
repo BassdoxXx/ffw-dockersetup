@@ -96,6 +96,7 @@ services:
       - "traefik.http.services.immich-svc.loadbalancer.server.port=2283"
       - "traefik.http.routers.immich-rtr.tls.certResolver=production"
       - "traefik.http.routers.immich-rtr.middlewares=crowdsec"
+      - "traefik.http.services.immich-svc.loadbalancer.passhostheader=true"
     healthcheck:
       disable: false
 

@@ -97,6 +97,7 @@ services:
       - "traefik.http.routers.immich-rtr.tls.certResolver=production"
       - "traefik.http.routers.immich-rtr.middlewares=crowdsec"
       - "traefik.http.services.immich-svc.loadbalancer.passhostheader=true"
+      - "traefik.http.services.immich-svc.loadbalancer.healthcheck.path=/api/server-info/ping"
     healthcheck:
       disable: false
 

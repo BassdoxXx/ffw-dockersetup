@@ -73,6 +73,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
+      # Explizite Service-Namen für Immich:
+      - DB_HOSTNAME=immich-database
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE_NAME=${DB_DATABASE_NAME}
+      - REDIS_HOSTNAME=immich-redis
     env_file:
       - .env
     depends_on:
@@ -100,6 +106,8 @@ services:
       - ./data/immich/model-cache:/cache
     environment:
       - TZ=${TZ}
+      # Auch hier Redis-Hostname setzen:
+      - REDIS_HOSTNAME=immich-redis
     env_file:
       - .env
     restart: always

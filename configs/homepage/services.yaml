@@ -62,4 +62,5 @@
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/authentik.svg
         description: Authentifizierungslösung
         container: authentik_server
+        siteMonitor: https://auth.ffw-windischletten.de
         showStats: true

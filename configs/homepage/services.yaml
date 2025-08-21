@@ -1,3 +1,36 @@
+- Tools:
+    - Engelsystem:
+        icon: mdi-fire-truck
+        href: https://helfer.ffw-windischletten.de
+        siteMonitor: https://helfer.ffw-windischletten.de
+        container: engelsystem
+        description: Dienstplan und Helferkoordination
+        showStats: true
+
+    - Einladungen:
+        icon: mdi-application
+        href: https://invites.ffw-windischletten.de/admin/
+        siteMonitor: https://invites.ffw-windischletten.de
+        container: simple_invites
+        description: Einladungsverwaltung
+        showStats: true
+
+    - Vaultwarden:
+        icon: vaultwarden
+        href: https://pw.ffw-windischletten.de
+        description: Passwortmanager für die Feuerwehr
+        siteMonitor: https://pw.ffw-windischletten.de
+        container: vaultwarden
+        showStats: true
+
+    - immich:
+        icon: immich
+        href: https://pics.ffw-windischletten.de
+        description: Bilderverwaltung
+        siteMonitor: https://pics.ffw-windischletten.de
+        container: immich_server
+        showStats: true
+
 - Cloud-Infrastruktur:
     - Dashboard:
         icon: mdi-view-dashboard
@@ -25,27 +58,8 @@
         container: crowdsec
         showStats: true
 
-- Tools:
-    - Engelsystem:
-        icon: mdi-fire-truck
-        href: https://helfer.ffw-windischletten.de
-        siteMonitor: https://helfer.ffw-windischletten.de
-        container: engelsystem
-        description: Dienstplan und Helferkoordination
-        showStats: true
-
-    - Einladungen:
-        icon: mdi-application
-        href: https://invites.ffw-windischletten.de/admin/
-        siteMonitor: https://invites.ffw-windischletten.de
-        container: simple_invites
-        description: Einladungsverwaltung
-        showStats: true
-
-    - Vaultwarden:
-        icon: vaultwarden
-        href: https://pw.ffw-windischletten.de
-        description: Passwortmanager für die Feuerwehr
-        siteMonitor: https://pw.ffw-windischletten.de
-        container: vaultwarden
+    - Authentik:
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/authentik.svg
+        description: Authentifizierungslösung
+        container: authentik_server
         showStats: true

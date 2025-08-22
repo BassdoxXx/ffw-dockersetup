@@ -21,7 +21,7 @@ services:
       - ./data/vaultwarden:/data
     environment:
       - WEBSOCKET_ENABLED=true
-      - SIGNUPS_ALLOWED=true
+      - SIGNUPS_ALLOWED=false
     #  - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
     networks:
       - core_net

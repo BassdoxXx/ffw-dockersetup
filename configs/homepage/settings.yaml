@@ -11,12 +11,13 @@ headerStyle: boxed
 fullWidth: true
 
 layout:
+  Tools:
+    style: row
+    columns: 3
   Cloud-Infrastruktur:
     style: row
     columns: 3
   Verwaltung:
     style: row
     columns: 3
-  Tools:
-    style: row
-    columns: 3
+

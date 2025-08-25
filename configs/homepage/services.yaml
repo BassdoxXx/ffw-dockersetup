@@ -27,7 +27,7 @@
         icon: immich
         href: https://pics.ffw-windischletten.de
         description: Bilderverwaltung
-        siteMonitor: https://pics.ffw-windischletten.de
+        siteMonitor: https://pics.ffw-windischletten.de/photos
         container: immich_server
         showStats: true
 
@@ -60,7 +60,8 @@
 
     - Authentik:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/authentik.svg
+        href: https://auth.ffw-windischletten.de
         description: Authentifizierungslösung
         container: authentik_server
-        siteMonitor: https://auth.ffw-windischletten.de
+        siteMonitor: https://auth.ffw-windischletten.de/if/flow/default-authentication-flow/?next=%2F
         showStats: true

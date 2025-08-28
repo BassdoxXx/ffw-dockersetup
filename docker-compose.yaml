@@ -59,7 +59,7 @@ services:
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=${SIMPLE_INVITES_SECRET_KEY}
-      - APP_HOSTNAME=https://invites.example.org
+      - APP_HOSTNAME=https://invites.ffw-windischletten.de
       - PDF_CLEANUP_MINUTES=30
     labels:
       - "com.centurylinklabs.watchtower.enable=true"

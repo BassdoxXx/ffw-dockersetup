@@ -80,7 +80,7 @@ services:
       - DB_DATABASE_NAME=${DB_DATABASE_NAME}
       - REDIS_HOSTNAME=immich-redis
       # OAuth Configuration:
-      - OAUTH_ENABLED=false
+      - OAUTH_ENABLED=true
       - OAUTH_ISSUER_URL=https://auth.ffw-windischletten.de/application/o/immich/
       - OAUTH_CLIENT_ID=immich
       - OAUTH_CLIENT_SECRET=${IMMICH_OAUTH_SECRET}

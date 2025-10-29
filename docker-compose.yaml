@@ -449,6 +449,8 @@ volumes:
     driver: local
   authentik_redis:
     driver: local
+  schichttool-data:
+    driver: local
 
 networks:
   core_net:

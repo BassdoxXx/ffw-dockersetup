@@ -187,6 +187,7 @@ services:
       - ADMIN_PASSWORD=${SCHICHTTOOL_ADMIN_PASSWORD:-changeme}
       - SHIFT_DATA_PATH=${SCHICHTTOOL_SHIFT_DATA_PATH:-/app/data/shifts.json}
     volumes:
+      - ./data/schichttool/shifts.json:/app/data/shifts.json
       - ./data/schichttool:/app/data
       - type: tmpfs
         target: /tmp

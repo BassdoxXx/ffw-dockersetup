@@ -173,47 +173,45 @@ services:
       - core_net
 
 
-
-
-  engelsystem:
-    build: 
-      context: ./app/engelsystem
-      dockerfile: docker/Dockerfile
-    container_name: engelsystem
+  schichttool:
+    image: bassdoxxx/schichttool:latest
+    container_name: schichttool
     restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     environment:
-      MYSQL_TYPE: mariadb
-      MYSQL_HOST: engelsystem_db
-      MYSQL_USER: engelsystem
-      MYSQL_PASSWORD: engelsystem
-      MYSQL_DATABASE: engelsystem
-      ENVIRONMENT: production
-      APP_URL: https://helfer.ffw-windischletten.de
+      - FLASK_ENV=production
+      - ADMIN_USERNAME=${SCHICHTTOOL_ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${SCHICHTTOOL_ADMIN_PASSWORD:-changeme}
+      - SHIFT_DATA_PATH=${SCHICHTTOOL_SHIFT_DATA_PATH:-/app/data/shifts.json}
     volumes:
-      - ./data/engelsystem/config:/var/www/html/config
-      - ./data/engelsystem/storage:/var/www/html/storage
-      - ./data/engelsystem/resources:/var/www/html/resources
+      - ./data/schichttool:/app/data
+      - type: tmpfs
+        target: /tmp
     networks:
       - core_net
-    depends_on:
-      - engelsystem_db
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-      
-  engelsystem_db:
-    image: mariadb:10.7
-    container_name: engelsystem_db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: engelsystem
-      MYSQL_USER: engelsystem
-      MYSQL_PASSWORD: engelsystem
-      MYSQL_RANDOM_ROOT_PASSWORD: "1"
-      MYSQL_INITDB_SKIP_TZINFO: "yes"
-    volumes:
-      - ./data/engelsystem/db:/var/lib/mysql
-    networks:
-      - core_net
+      - "traefik.enable=true"
+      - "traefik.http.routers.schichttool-rtr.entrypoints=https"
+      - "traefik.http.routers.schichttool-rtr.rule=Host(`schicht.ffw-windischletten.de`)"
+      - "traefik.http.routers.schichttool-rtr.service=schichttool-svc"
+      - "traefik.http.services.schichttool-svc.loadbalancer.server.port=5151"
+      - "traefik.http.routers.schichttool-rtr.tls.certResolver=production"
+      - "traefik.http.routers.schichttool-rtr.middlewares=crowdsec"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:5151/health').status == 200 else 1)"
+      interval: 5m
+      timeout: 10s
+      retries: 2
+      start_period: 30s
 
   whoami:
     image: containous/whoami

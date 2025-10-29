@@ -185,10 +185,9 @@ services:
       - FLASK_ENV=production
       - ADMIN_USERNAME=${SCHICHTTOOL_ADMIN_USERNAME:-admin}
       - ADMIN_PASSWORD=${SCHICHTTOOL_ADMIN_PASSWORD:-changeme}
-      - SHIFT_DATA_PATH=${SCHICHTTOOL_SHIFT_DATA_PATH:-/app/data/shifts.json}
+      - SHIFT_DATA_PATH=${SCHICHTTOOL_SHIFT_DATA_PATH:-/app/schichttool_data/shifts.json}
     volumes:
-      - ./data/schichttool/shifts.json:/app/data/shifts.json
-      - ./data/schichttool:/app/data
+      - ./schichttool_data:/app/data
       - type: tmpfs
         target: /tmp
     networks:

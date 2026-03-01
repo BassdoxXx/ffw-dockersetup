@@ -10,8 +10,6 @@ services:
       - ./data/cloudflared:/etc/cloudflared  # Explizites Mapping für Cloudflared-Konfiguration
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
 
   vaultwarden:
     image: vaultwarden/server:latest
@@ -25,8 +23,6 @@ services:
     #  - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/"]
       interval: 1m30s
@@ -45,8 +41,6 @@ services:
       - HOMEPAGE_ALLOWED_HOSTS=home.ffw-windischletten.de
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
 
   simple_invites:
     image: bassdoxxx/simple_invites:latest
@@ -61,8 +55,6 @@ services:
       - SECRET_KEY=${SIMPLE_INVITES_SECRET_KEY}
       - APP_HOSTNAME=https://invites.ffw-windischletten.de
       - PDF_CLEANUP_MINUTES=30
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - core_net
 
@@ -96,7 +88,6 @@ services:
     networks:
       - core_net
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
       - "traefik.http.routers.immich-rtr.entrypoints=https"
       - "traefik.http.routers.immich-rtr.rule=Host(`pics.ffw-windischletten.de`)"
@@ -122,8 +113,6 @@ services:
     restart: always
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       disable: false
 
@@ -135,8 +124,6 @@ services:
       - core_net
     volumes:
       - ./data/immich/redis:/data
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       test: redis-cli ping || exit 1
 
@@ -155,22 +142,7 @@ services:
     restart: always
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
       
-  watchtower:
-    image: containrrr/watchtower:latest
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/watchtower:/var/lib/watchtower  # Explizites Mapping für Watchtower-Daten
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_LABEL_ENABLE=true
-      - WATCHTOWER_POLL_INTERVAL=3600
-    networks:
-      - core_net
 
 
   schichttool:
@@ -193,7 +165,6 @@ services:
     networks:
       - core_net
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
       - "traefik.http.routers.schichttool-rtr.entrypoints=https"
       - "traefik.http.routers.schichttool-rtr.rule=Host(`schicht.ffw-windischletten.de`)"
@@ -211,24 +182,6 @@ services:
       timeout: 10s
       retries: 2
       start_period: 30s
-
-  whoami:
-    image: containous/whoami
-    container_name: whoami
-    restart: unless-stopped
-    volumes:
-      - ./data/whoami:/data
-    networks:
-      - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami-rtr.entrypoints=https"
-      - "traefik.http.routers.whoami-rtr.rule=Host(`test.ffw-windischletten.de`)"
-      - "traefik.http.routers.whoami-rtr.service=whoami-svc"
-      - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
-      - "traefik.http.routers.whoami-rtr.tls.certResolver=production"
-      - "traefik.http.routers.whoami-rtr.middlewares=crowdsec"
 
   crowdsec:
     image: crowdsecurity/crowdsec:latest
@@ -249,11 +202,9 @@ services:
       - ./data/traefik/logs:/var/log/traefik:ro
     networks:
       - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
 
   traefik:
-    image: traefik:v3.5.0
+    image: traefik:v3.6.9
     container_name: traefik
     restart: always
     ports:
@@ -316,7 +267,6 @@ services:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
       # CROWDSEC LABELS:
       - "traefik.http.middlewares.crowdsec.plugin.bouncer.enabled=true"
@@ -335,119 +285,6 @@ services:
 
     networks:
       - core_net
-
-  authentik-postgresql:
-    image: docker.io/library/postgres:16-alpine
-    container_name: authentik_postgresql
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${PG_DB:-authentik}
-      POSTGRES_PASSWORD: ${PG_PASS}
-      POSTGRES_USER: ${PG_USER:-authentik}
-    healthcheck:
-      interval: 30s
-      retries: 5
-      start_period: 20s
-      test:
-        - CMD-SHELL
-        - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
-      timeout: 5s
-    volumes:
-      - authentik_database:/var/lib/postgresql/data
-    networks:
-      - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-  authentik-redis:
-    image: docker.io/library/redis:alpine
-    container_name: authentik_redis
-    restart: unless-stopped
-    command: --save 60 1 --loglevel warning
-    healthcheck:
-      interval: 30s
-      retries: 5
-      start_period: 20s
-      test:
-        - CMD-SHELL
-        - redis-cli ping | grep PONG
-      timeout: 3s
-    volumes:
-      - authentik_redis:/data
-    networks:
-      - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-  authentik-server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.8.0}
-    container_name: authentik_server
-    restart: unless-stopped
-    command: server
-    depends_on:
-      authentik-postgresql:
-        condition: service_healthy
-      authentik-redis:
-        condition: service_healthy
-    environment:
-      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_REDIS__HOST: authentik-redis
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-    env_file:
-      - .env
-    volumes:
-      - ./data/authentik/media:/media
-      - ./data/authentik/custom-templates:/templates
-    networks:
-      - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-      - "traefik.enable=true"
-      - "traefik.http.routers.authentik-rtr.entrypoints=https"
-      - "traefik.http.routers.authentik-rtr.rule=Host(`auth.ffw-windischletten.de`)"
-      - "traefik.http.routers.authentik-rtr.service=authentik-svc"
-      - "traefik.http.services.authentik-svc.loadbalancer.server.port=9000"
-      - "traefik.http.routers.authentik-rtr.tls.certResolver=production"
-      - "traefik.http.routers.authentik-rtr.middlewares=crowdsec"
-
-  authentik-worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.8.0}
-    container_name: authentik_worker
-    restart: unless-stopped
-    command: worker
-    depends_on:
-      authentik-postgresql:
-        condition: service_healthy
-      authentik-redis:
-        condition: service_healthy
-    environment:
-      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_REDIS__HOST: authentik-redis
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-    env_file:
-      - .env
-    user: root
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/authentik/media:/media
-      - ./data/authentik/certs:/certs
-      - ./data/authentik/custom-templates:/templates
-    networks:
-      - core_net
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-volumes:
-  authentik_database:
-    driver: local
-  authentik_redis:
-    driver: local
 
 
 networks:

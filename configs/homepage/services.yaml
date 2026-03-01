@@ -1,11 +1,4 @@
 - Tools:
-    - Engelsystem:
-        icon: mdi-fire-truck
-        href: https://helfer.ffw-windischletten.de
-        siteMonitor: https://helfer.ffw-windischletten.de
-        container: engelsystem
-        description: Dienstplan und Helferkoordination
-        showStats: true
 
     - Einladungen:
         icon: mdi-application
@@ -46,22 +39,8 @@
         container: cloudflared
         showStats: true
 
-    - Watchtower:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/watchtower.svg
-        description: Aktualisiert automatisch die Container
-        container: watchtower
-        showStats: true
-
     - Crowdsec:
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/crowdsec.svg
         description: Crowdsourced IPS
         container: crowdsec
-        showStats: true
-
-    - Authentik:
-        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/authentik.svg
-        href: https://auth.ffw-windischletten.de
-        description: Authentifizierungslösung
-        container: authentik_server
-        siteMonitor: https://auth.ffw-windischletten.de/if/flow/default-authentication-flow/?next=%2F
         showStats: true

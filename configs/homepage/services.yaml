@@ -8,6 +8,14 @@
         description: Einladungsverwaltung
         showStats: true
 
+    - Schichttool:
+        icon: mdi-application
+        href: https://schicht.ffw-windischletten.de/admin/
+        siteMonitor: https://schicht.ffw-windischletten.de
+        container: schichttool
+        description: Schichtverwaltung
+        showStats: true
+
     - Vaultwarden:
         icon: vaultwarden
         href: https://pw.ffw-windischletten.de

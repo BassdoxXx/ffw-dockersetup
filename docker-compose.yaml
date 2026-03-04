@@ -168,7 +168,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.schichttool-rtr.entrypoints=https"
       - "traefik.http.routers.schichttool-rtr.rule=Host(`schicht.ffw-windischletten.de`)"
-      - "traefik.http.routers.schichttool-rtr.service=schichttool-svc"
+      # Normaler Betrieb:
+      # - "traefik.http.routers.schichttool-rtr.service=schichttool-svc"
+      # Wartungsmodus (Zeile oben auskommentieren, Zeile unten aktivieren):
+      - "traefik.http.routers.schichttool-rtr.service=maintenance-svc"
       - "traefik.http.services.schichttool-svc.loadbalancer.server.port=5151"
       - "traefik.http.routers.schichttool-rtr.tls.certResolver=production"
       - "traefik.http.routers.schichttool-rtr.middlewares=crowdsec"
@@ -182,6 +185,18 @@ services:
       timeout: 10s
       retries: 2
       start_period: 30s
+
+  maintenance:
+    image: nginx:alpine
+    container_name: maintenance_page
+    restart: unless-stopped
+    volumes:
+      - ./configs/maintenance:/usr/share/nginx/html:ro
+    networks:
+      - core_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.maintenance-svc.loadbalancer.server.port=80"
 
   crowdsec:
     image: crowdsecurity/crowdsec:latest

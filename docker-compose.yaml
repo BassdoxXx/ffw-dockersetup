@@ -192,6 +192,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./configs/maintenance:/usr/share/nginx/html:ro
+      - ./configs/maintenance/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - core_net
     labels:

@@ -169,9 +169,9 @@ services:
       - "traefik.http.routers.schichttool-rtr.entrypoints=https"
       - "traefik.http.routers.schichttool-rtr.rule=Host(`schicht.ffw-windischletten.de`)"
       # Normaler Betrieb:
-      # - "traefik.http.routers.schichttool-rtr.service=schichttool-svc"
+      - "traefik.http.routers.schichttool-rtr.service=schichttool-svc"
       # Wartungsmodus (Zeile oben auskommentieren, Zeile unten aktivieren):
-      - "traefik.http.routers.schichttool-rtr.service=maintenance-svc"
+      #- "traefik.http.routers.schichttool-rtr.service=maintenance-svc"
       - "traefik.http.services.schichttool-svc.loadbalancer.server.port=5151"
       - "traefik.http.routers.schichttool-rtr.tls.certResolver=production"
       - "traefik.http.routers.schichttool-rtr.middlewares=crowdsec"

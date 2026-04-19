@@ -66,6 +66,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
+      - IMMICH_HOST=0.0.0.0
       - DB_HOSTNAME=immich-database
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -106,6 +107,7 @@ services:
       - ./data/immich/model-cache:/cache
     environment:
       - TZ=${TZ}
+      - IMMICH_HOST=0.0.0.0
       # Auch hier Redis-Hostname setzen:
       - REDIS_HOSTNAME=immich-redis
     env_file:

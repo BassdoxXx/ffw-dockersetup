@@ -3,12 +3,12 @@
     text_size: xl
     text: Herzlich Willkommen auf dem Dashboard der Feuerwehr Windischletten!
 
-- resources:
-    cpu: true
-    memory: true
-    disk: /
-    uptime: true
-    unit: metric
+# - resources:
+#     cpu: true
+#     memory: true
+#     disk: /
+#     uptime: true
+#     unit: metric
 
 - datetime:
     format:
